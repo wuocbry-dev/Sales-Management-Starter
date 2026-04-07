@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginApi } from "../api/authApi";
+import { loginApi, meApi } from "../api/authApi";
+import { useAuth } from "../hooks/useAuth";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("admin");
+  const { setAccessToken, setUser } = useAuth();
+  const [usernameOrEmail, setUsernameOrEmail] = useState("admin");
   const [password, setPassword] = useState("admin123");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,11 +17,18 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await loginApi({ username, password });
+      const result = await loginApi({ usernameOrEmail, password });
       const data = result.data;
 
-      localStorage.setItem("access_token", data.accessToken);
-      localStorage.setItem("user_info", JSON.stringify(data));
+      setAccessToken(data.accessToken);
+
+      // Fetch profile right after login
+      const meRes = await meApi();
+      if (meRes.success && meRes.data) {
+        setUser(meRes.data);
+        localStorage.setItem("user_info", JSON.stringify(meRes.data));
+      }
+
       navigate("/app");
     } catch (err: any) {
       setError(err?.response?.data?.message || "Login failed");
@@ -31,12 +40,12 @@ function LoginPage() {
   return (
     <div>
       <h2>Login</h2>
-      <p className="muted">Use admin/admin123 or manager/manager123</p>
+      <p className="muted">Use admin/admin123, manager01/manager123, or cashier01/cashier123</p>
 
       <form onSubmit={handleSubmit} className="form-grid">
         <label>
-          Username
-          <input value={username} onChange={(e) => setUsername(e.target.value)} />
+          Username / Email
+          <input value={usernameOrEmail} onChange={(e) => setUsernameOrEmail(e.target.value)} />
         </label>
 
         <label>
