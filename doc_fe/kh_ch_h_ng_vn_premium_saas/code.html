@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Khách hàng - VN Premium SaaS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#2F6BFF',
+                            50: '#F0F4FF',
+                            100: '#E1E9FF',
+                            600: '#2F6BFF',
+                            700: '#1E52D9',
+                        },
+                        teal: {
+                            500: '#14B8A6',
+                        }
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", // 12px based on design system
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Be Vietnam Pro", "sans-serif"],
+                        "body": ["Be Vietnam Pro", "sans-serif"],
+                        "label": ["Be Vietnam Pro", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col z-50 overflow-y-auto">
+<div class="px-6 py-6">
+<h1 class="text-lg font-black tracking-tight text-slate-900 dark:text-white uppercase">VN Premium</h1>
+<p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">SME Management</p>
+</div>
+<nav class="flex flex-col h-full py-4 space-y-1">
+<!-- Navigation Items with Active State Logic -->
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+                Tổng quan
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="point_of_sale">point_of_sale</span>
+                Bán hàng
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="receipt_long">receipt_long</span>
+                Đơn hàng
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="inventory_2">inventory_2</span>
+                Sản phẩm
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="warehouse">warehouse</span>
+                Kho hàng
+            </a>
+<!-- Active Tab: Khách hàng -->
+<a class="flex items-center px-6 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="group">group</span>
+                Khách hàng
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="badge">badge</span>
+                Nhân viên
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="sell">sell</span>
+                Khuyến mãi
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="leaderboard">leaderboard</span>
+                Báo cáo
+            </a>
+<a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-200 ease-in-out font-sans text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+                Cài đặt
+            </a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 min-h-screen">
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-40 shadow-sm">
+<div class="flex items-center w-1/3">
+<div class="relative w-full max-w-sm">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary-600 transition-all" placeholder="Tìm tên/SĐT/mã KH..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-y-0 space-x-4">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="px-3 py-1.5 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors font-medium">Settings</button>
+<div class="h-8 w-px bg-slate-200 dark:border-slate-700 mx-1"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-slate-900 dark:text-white">Admin VN</p>
+<p class="text-[10px] text-slate-500 font-medium">VN Premium SaaS</p>
+</div>
+<img alt="User profile avatar" class="h-9 w-9 rounded-full object-cover border border-slate-200 dark:border-slate-700 shadow-sm" data-alt="professional male business executive in modern office setting, friendly expression, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7R3DItSQ0xG_bPb7u-x0Khuz5WSQ19soqHJn6sWt6QYNRthusktiurBgpju7lZZKBao4wbf56Q7ZmjFOyp4jGa2daS6o82q4g5ZHwfm3FSX0TCnIITqvclLVW0xRymNC-cVKiA6PcAmRIJxF3rCUVXf8IfLOzMUpQ3VxgyThfXpM0Dt18Jn4QLxu-5dXgKrPpz7gPzb073K5KRodNcocpENjjIMrb_8ed8OQtgTOmneFfEAx6Knko0CPnAwcDiQ2Pw61kj6fwSxeO"/>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="pt-24 pb-12 px-8 flex gap-8">
+<!-- Left Side: Dashboard Content -->
+<div class="flex-1 space-y-8">
+<!-- Page Header -->
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Khách hàng</h2>
+<p class="text-sm text-slate-500 font-medium">Quản lý và chăm sóc mối quan hệ khách hàng của bạn</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="upload">upload</span>
+                            Nhập danh sách
+                        </button>
+<button class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span>
+                            Xuất file
+                        </button>
+<button class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors shadow-md shadow-primary-600/20 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                            Thêm khách hàng
+                        </button>
+</div>
+</div>
+<!-- Overview Cards (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-start justify-between mb-3">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 rounded-lg">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+<span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[11px] font-bold rounded-full">+8.2%</span>
+</div>
+<p class="text-slate-500 text-xs font-semibold mb-1">Tổng khách hàng</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">12.450</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-start justify-between mb-3">
+<div class="p-2 bg-teal-50 dark:bg-teal-900/30 text-teal-600 rounded-lg">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+</div>
+<span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[11px] font-bold rounded-full">+5.1%</span>
+</div>
+<p class="text-slate-500 text-xs font-semibold mb-1">Khách mới 30 ngày</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">850</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-start justify-between mb-3">
+<div class="p-2 bg-amber-50 dark:bg-amber-900/30 text-amber-600 rounded-lg">
+<span class="material-symbols-outlined" data-icon="cached">cached</span>
+</div>
+<span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[11px] font-bold rounded-full">+2.4%</span>
+</div>
+<p class="text-slate-500 text-xs font-semibold mb-1">Tỷ lệ quay lại</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">68%</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-start justify-between mb-3">
+<div class="p-2 bg-purple-50 dark:bg-purple-900/30 text-purple-600 rounded-lg">
+<span class="material-symbols-outlined" data-icon="diamond">diamond</span>
+</div>
+<span class="text-emerald-500 text-[11px] font-bold">Tháng này</span>
+</div>
+<p class="text-slate-500 text-xs font-semibold mb-1">Doanh thu khách VIP</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">₫428.450.000</h3>
+</div>
+</div>
+<!-- Segmentation Cards -->
+<div class="grid grid-cols-3 gap-6">
+<div class="bg-blue-600 p-4 rounded-lg text-white shadow-lg shadow-blue-600/20 relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-xs font-medium text-blue-100">Nhóm Mới</p>
+<div class="flex items-end justify-between mt-1">
+<h4 class="text-xl font-bold">2.340</h4>
+<span class="text-sm font-bold opacity-80">18.8%</span>
+</div>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-white/10 text-8xl" data-icon="neurology">neurology</span>
+</div>
+<div class="bg-white dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm">
+<p class="text-xs font-semibold text-slate-500">Nhóm Quay lại</p>
+<div class="flex items-end justify-between mt-1">
+<h4 class="text-xl font-bold text-slate-900 dark:text-white">8.460</h4>
+<span class="text-sm font-bold text-teal-500">67.9%</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm">
+<p class="text-xs font-semibold text-slate-500">Nhóm VIP</p>
+<div class="flex items-end justify-between mt-1">
+<h4 class="text-xl font-bold text-slate-900 dark:text-white">1.650</h4>
+<span class="text-sm font-bold text-amber-500">13.3%</span>
+</div>
+</div>
+</div>
+<!-- Filter & Table Section -->
+<div class="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+<!-- Filter Bar -->
+<div class="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+<div class="flex flex-wrap gap-3">
+<select class="text-sm border-slate-200 dark:border-slate-800 dark:bg-slate-800 rounded-lg py-1.5 focus:ring-primary-600 transition-all">
+<option>Tất cả Hạng</option>
+<option>Hạng VIP</option>
+<option>Thân thiết</option>
+<option>Thường</option>
+</select>
+<select class="text-sm border-slate-200 dark:border-slate-800 dark:bg-slate-800 rounded-lg py-1.5 focus:ring-primary-600 transition-all">
+<option>Tất cả Nguồn</option>
+<option>Tại cửa hàng (POS)</option>
+<option>Website/Online</option>
+</select>
+<select class="text-sm border-slate-200 dark:border-slate-800 dark:bg-slate-800 rounded-lg py-1.5 focus:ring-primary-600 transition-all">
+<option>Chi nhánh: Tất cả</option>
+<option>Quận 1, HCM</option>
+<option>Cầu Giấy, HN</option>
+</select>
+<button class="p-2 text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+<p class="text-xs text-slate-400 font-medium italic">Hiển thị 10 trong tổng số 12.450 kết quả</p>
+</div>
+<!-- Table SaaS -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/50 dark:bg-slate-800/50 text-[11px] uppercase tracking-wider text-slate-500 font-bold">
+<th class="px-6 py-4">Khách hàng</th>
+<th class="px-6 py-4">Số điện thoại</th>
+<th class="px-6 py-4">Hạng</th>
+<th class="px-6 py-4">Điểm</th>
+<th class="px-6 py-4">Tổng chi tiêu</th>
+<th class="px-6 py-4">Đơn gần nhất</th>
+<th class="px-6 py-4">Hoạt động</th>
+<th class="px-6 py-4 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group cursor-pointer bg-blue-50/30">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Nguyễn Văn Anh" class="h-10 w-10 rounded-full object-cover" data-alt="close up portrait of a young vietnamese woman with a kind smile, professional business attire, natural studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFUk_U6TV2DliSQUAdt9PJP1vQZJkDi-TF0oHZgfsMDR9kMJ-xdxbAz16i9Wbis_2-N-NwPxRhy8RuzdAF1oZQXM48oGvPO0VbOXyq-37GVXUyzQbHK4PGZG9HMQ_7JL4Riw-cFfnh6K556b5vYkBxEZcG1IeXO_bZXFgGm4sZqBugQ9kuFixZ99A0KbYu9FBPouFFgm3U19lS0Gg4XLxyiKfOMiIToUq--4KPI1CCa4QJwq5MC2QW_fCupa8FfYp93S-hCN2ovBMN"/>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Nguyễn Văn Anh</p>
+<p class="text-[11px] text-slate-500">ID: KH1209</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">0901 234 567</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold rounded uppercase">VIP</span>
+</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-700 dark:text-slate-300">2.450</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">₫45.200.000</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">12/03/2024</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-teal-50 text-teal-600 text-[10px] font-bold rounded-full">Đặt hàng</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- More Rows -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 font-bold text-sm">TV</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Trần Văn Bình</p>
+<p class="text-[11px] text-slate-500">ID: KH1210</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">0932 888 999</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded uppercase">Thân thiết</span>
+</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-700 dark:text-slate-300">1.200</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">₫12.800.000</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">10/03/2024</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full">Xem sản phẩm</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Lê Thị Cẩm" class="h-10 w-10 rounded-full object-cover" data-alt="portrait of a confident middle-aged man, stylish glasses, friendly business professional, clean office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4JWd5wk0pRNAcEbmFJQ8OLiSL1FSpQIAgh-Tf0vd3ixlGtywni9WWnfvlXB_sZPUBnrmcHbdvqwHIgjTaBXDHzMNAsNMItgJWUVU3j4OaEa5y4XkTM1_BTpDw5MiM-IjoPTPkEsMDjmbhjNIlzy8IbHPZ1Gfi7j8vDo2SV8-FliyHA-MHX_GR5WZf6Xlq2_uBzxy6rbWoxHOVGmYNFoHiJysYoVdZ_MkM2NzL2jl11MvDVAEUJlW7OnC57wdSy1v_UGqkaW9b-28-"/>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Lê Thị Cẩm</p>
+<p class="text-[11px] text-slate-500">ID: KH1211</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">0988 111 222</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold rounded uppercase">VIP</span>
+</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-700 dark:text-slate-300">5.600</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">₫105.400.000</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">08/03/2024</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-teal-50 text-teal-600 text-[10px] font-bold rounded-full">Đặt hàng</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Panel: Customer Quick Profile -->
+<aside class="w-80 space-y-6">
+<!-- Loyalty Snapshot Card -->
+<div class="bg-gradient-to-br from-primary-600 to-blue-700 p-6 rounded-lg text-white shadow-xl shadow-blue-500/30">
+<div class="flex items-center justify-between mb-6">
+<span class="material-symbols-outlined text-3xl opacity-80" data-icon="loyalty">loyalty</span>
+<div class="text-right">
+<p class="text-[10px] uppercase font-bold opacity-70">Thẻ Thành Viên</p>
+<p class="text-xs font-medium">VN-PREMIUM-2025</p>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<p class="text-[11px] opacity-70 font-semibold mb-1 uppercase">Điểm tích lũy</p>
+<div class="flex items-baseline gap-2">
+<h5 class="text-3xl font-black">2.450</h5>
+<span class="text-xs opacity-70">điểm</span>
+</div>
+</div>
+<div class="pt-4 border-t border-white/20 flex justify-between items-center">
+<div>
+<p class="text-[10px] opacity-70 font-bold uppercase">Hạng hiện tại</p>
+<p class="text-sm font-bold">VIP Platinum</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] opacity-70 font-bold uppercase">Hết hạn ưu đãi</p>
+<p class="text-sm font-bold text-amber-300">12 ngày tới</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Profile Detail -->
+<div class="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-100 dark:border-slate-800 p-6">
+<div class="text-center mb-6">
+<div class="relative inline-block mb-3">
+<img alt="Nguyễn Văn Anh" class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-lg mx-auto" data-alt="close up high resolution portrait of a vietnamese woman with gentle expression, corporate professional photography, studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB54sFTxGuxobDAOJq5B86063Z8NlGmv7vue20IXd-2EVUi-5ytkQnA_rYzuFqh8GjQ5NBuPMmLAw8CNFYsw-KBpfnRWexbUd6aeZRXlhCbUXH8jvgXC3U77qfDBP9InSmNzFIKn6b2ACBQqYF_HNCK36-9nByUw5SI14LvBDkn5mtXU4ekuqD5fPIMQsTCsfjRuAEGPkMSRw5lsIVgJodPFj1j0EgzQlhee1S2s5rzE6I1QPaqsTd9sjQ9IVXsTjdX6UOMJB1hKDOn"/>
+<span class="absolute bottom-0 right-1 w-6 h-6 bg-emerald-500 border-2 border-white rounded-full"></span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white">Nguyễn Văn Anh</h4>
+<span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full uppercase mt-1">Hạng VIP</span>
+</div>
+<!-- Quick Actions -->
+<div class="grid grid-cols-3 gap-2 mb-8">
+<button class="flex flex-col items-center p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
+<span class="material-symbols-outlined text-primary-600 mb-1" data-icon="call">call</span>
+<span class="text-[10px] font-bold text-slate-500">Gọi điện</span>
+</button>
+<button class="flex flex-col items-center p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
+<span class="material-symbols-outlined text-teal-500 mb-1" data-icon="chat">chat</span>
+<span class="text-[10px] font-bold text-slate-500">Zalo</span>
+</button>
+<button class="flex flex-col items-center p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-700">
+<span class="material-symbols-outlined text-amber-500 mb-1" data-icon="stars">stars</span>
+<span class="text-[10px] font-bold text-slate-500">Tặng điểm</span>
+</button>
+</div>
+<button class="w-full py-2.5 bg-primary-600 text-white rounded-lg text-sm font-bold shadow-md shadow-primary-600/20 hover:bg-primary-700 transition-colors mb-8 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                        Tạo đơn hàng mới
+                    </button>
+<!-- Recent Orders History -->
+<div>
+<div class="flex items-center justify-between mb-4">
+<h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-tight">Lịch sử mua (3 đơn gần nhất)</h5>
+<a class="text-[10px] font-bold text-primary-600" href="#">Xem tất cả</a>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg group cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors">
+<div class="w-10 h-10 rounded bg-white dark:bg-slate-900 flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-slate-400" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-slate-900 dark:text-white truncate">Bộ sản phẩm Premium Skincare</p>
+<p class="text-[10px] text-slate-500 font-medium">12/03/2024 • ₫2.450.000</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg group cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors">
+<div class="w-10 h-10 rounded bg-white dark:bg-slate-900 flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-slate-400" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-slate-900 dark:text-white truncate">Gói Member 1 năm</p>
+<p class="text-[10px] text-slate-500 font-medium">15/01/2024 • ₫1.200.000</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg group cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors">
+<div class="w-10 h-10 rounded bg-white dark:bg-slate-900 flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-slate-400" data-icon="shopping_basket">shopping_basket</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-slate-900 dark:text-white truncate">Máy massage mini C-Type</p>
+<p class="text-[10px] text-slate-500 font-medium">20/12/2023 • ₫850.000</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</body></html>

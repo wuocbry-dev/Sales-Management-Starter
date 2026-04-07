@@ -10,8 +10,15 @@ import CustomerListPage from "../../features/customer/pages/CustomerListPage";
 import SalesOrderListPage from "../../features/sales-order/pages/SalesOrderListPage";
 import ReportPage from "../../features/report/pages/ReportPage";
 import NotFoundPage from "../../pages/NotFoundPage";
+import InventoryPage from "../../features/inventory/pages/InventoryPage";
+import EmployeeListPage from "../../features/employee/pages/EmployeeListPage";
+import PromotionListPage from "../../features/promotion/pages/PromotionListPage";
+import PaymentPage from "../../features/payment/pages/PaymentPage";
+import ShippingPage from "../../features/shipping/pages/ShippingPage";
+import StoreListPage from "../../features/store/pages/StoreListPage";
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+  [
   {
     path: "/",
     element: <PublicLayout />,
@@ -32,11 +39,23 @@ export const router = createBrowserRouter([
       { path: "products", element: <ProductListPage /> },
       { path: "customers", element: <CustomerListPage /> },
       { path: "orders", element: <SalesOrderListPage /> },
-      { path: "reports", element: <ReportPage /> }
+      { path: "reports", element: <ReportPage /> },
+      { path: "inventory", element: <InventoryPage /> },
+      { path: "employees", element: <EmployeeListPage /> },
+      { path: "promotions", element: <PromotionListPage /> },
+      { path: "payments", element: <PaymentPage /> },
+      { path: "shipping", element: <ShippingPage /> },
+      { path: "stores", element: <StoreListPage /> }
     ]
   },
   {
     path: "*",
     element: <NotFoundPage />
   }
-]);
+  ],
+  {
+    future: {
+      v7_startTransition: true
+    }
+  }
+);

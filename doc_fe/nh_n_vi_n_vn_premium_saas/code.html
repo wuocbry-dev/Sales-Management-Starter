@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nhân viên - VN Premium SaaS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#2F6BFF',
+                            50: '#F0F4FF',
+                            100: '#E1E9FF',
+                            600: '#2F6BFF',
+                            700: '#1E4DB7',
+                        },
+                        accent: {
+                            teal: '#14B8A6',
+                        }
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Be Vietnam Pro"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+        .glass-header { backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 z-50">
+<div class="flex flex-col h-full p-4">
+<div class="px-4 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white font-black text-xl">VP</div>
+<div>
+<h1 class="text-lg font-black tracking-tight text-blue-600 leading-none">VN Premium</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-1">Quản lý SME</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col space-y-1 flex-grow">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Tổng quan</span>
+</a>
+<!-- Employees (ACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="text-sm">Nhân viên</span>
+</a>
+<!-- Projects -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-sm font-medium">Dự án</span>
+</a>
+<!-- Finance -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-sm font-medium">Tài chính</span>
+</a>
+<!-- Analytics -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-sm font-medium">Báo cáo</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-medium">Cấu hình</span>
+</a>
+</nav>
+<div class="mt-auto p-4 bg-primary-50 rounded-2xl">
+<p class="text-xs font-bold text-primary-600 mb-2">Gói Pro sắp hết hạn</p>
+<button class="w-full py-2 bg-primary-600 text-white text-xs font-bold rounded-lg hover:bg-primary-700 transition-colors shadow-lg shadow-blue-200">
+                    Nâng cấp gói
+                </button>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 w-full ml-64 flex justify-between items-center h-16 px-8 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800" style="width: calc(100% - 16rem);">
+<div class="flex items-center flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-100 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary-600/20" placeholder="Tìm kiếm tính năng, nhân viên..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3 pl-2 cursor-pointer hover:opacity-80 transition-opacity">
+<div class="text-right">
+<p class="text-sm font-bold text-slate-900 leading-none">Admin VN</p>
+<p class="text-[10px] text-slate-500 mt-1">Quản trị viên</p>
+</div>
+<img alt="User profile" class="w-10 h-10 rounded-full border-2 border-white shadow-sm ring-1 ring-slate-100" data-alt="Professional portrait of a male business executive wearing a grey suit in a bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_JJ-XU48IRNJjyT5RrPtbCCqC2vLa3iG01cKm11qewXIfPTU24jnYIPVJFein4eI6kYXknikDC6HKYwbDuOVyESpO5iUZy8Q2DODIZy_qBUJ6jEUyxDokXxrZAwIY1Z02UUfDNOXEedhre6ObG1WuoAv4m-SqGUmm6T32znDuwq-Lt6V77ZnZwikOm0M3WvGenQf6UAtZl_FgPS6kpMhpr09NBMG47_0giVs_vca5x9_Ueu7IpszxRqZzUmXutbZQfq9_LMs2rM9x"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 pt-16 min-h-screen p-8 bg-slate-50">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<h2 class="text-2xl font-bold text-slate-900 tracking-tight">Nhân viên</h2>
+<p class="text-slate-500 text-sm mt-1">Quản lý thông tin nhân sự, phân quyền và chấm công tập trung.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span>
+                    Xuất file
+                </button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="admin_panel_settings">admin_panel_settings</span>
+                    Phân quyền
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white font-bold text-sm rounded-xl hover:bg-primary-700 shadow-lg shadow-blue-200 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    Thêm nhân viên
+                </button>
+</div>
+</div>
+<!-- Tabs Navigation -->
+<div class="flex border-b border-slate-200 mb-6 gap-8 overflow-x-auto no-scrollbar">
+<button class="pb-4 text-sm font-bold text-primary-600 border-b-2 border-primary-600 whitespace-nowrap">Danh sách</button>
+<button class="pb-4 text-sm font-medium text-slate-500 hover:text-slate-700 border-b-2 border-transparent whitespace-nowrap">Ca làm</button>
+<button class="pb-4 text-sm font-medium text-slate-500 hover:text-slate-700 border-b-2 border-transparent whitespace-nowrap">Vai trò &amp; quyền</button>
+<button class="pb-4 text-sm font-medium text-slate-500 hover:text-slate-700 border-b-2 border-transparent whitespace-nowrap">Chấm công</button>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<!-- Table Container (Tab Danh sách) -->
+<div class="col-span-12 lg:col-span-8 space-y-4">
+<!-- Filter Bar -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap gap-4">
+<div class="flex-grow min-w-[240px]">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-9 pr-4 text-sm focus:ring-primary-600" placeholder="Tìm tên, SĐT, mã NV..." type="text"/>
+</div>
+</div>
+<div class="flex gap-3 flex-wrap">
+<select class="text-sm bg-slate-50 border-slate-200 rounded-lg py-2 pl-3 pr-8 focus:ring-primary-600">
+<option>Chi nhánh: Tất cả</option>
+<option>Quận 1</option>
+<option>Quận 3</option>
+</select>
+<select class="text-sm bg-slate-50 border-slate-200 rounded-lg py-2 pl-3 pr-8 focus:ring-primary-600">
+<option>Vai trò: Tất cả</option>
+<option>Quản lý</option>
+<option>Thu ngân</option>
+<option>Bán hàng</option>
+</select>
+<select class="text-sm bg-slate-50 border-slate-200 rounded-lg py-2 pl-3 pr-8 focus:ring-primary-600">
+<option>Trạng thái: Đang làm</option>
+<option>Tạm nghỉ</option>
+</select>
+<button class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Main Table -->
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead>
+<tr class="bg-slate-50/50 border-b border-slate-200">
+<th class="px-6 py-4 w-10">
+<input class="rounded border-slate-300 text-primary-600 focus:ring-primary-600" type="checkbox"/>
+</th>
+<th class="px-4 py-4 font-bold text-slate-600">Nhân viên</th>
+<th class="px-4 py-4 font-bold text-slate-600">Mã NV</th>
+<th class="px-4 py-4 font-bold text-slate-600">Vai trò</th>
+<th class="px-4 py-4 font-bold text-slate-600">Chi nhánh</th>
+<th class="px-4 py-4 font-bold text-slate-600">Trạng thái</th>
+<th class="px-4 py-4 font-bold text-slate-600">Hiệu suất</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 (Selected) -->
+<tr class="hover:bg-primary-50/30 transition-colors bg-blue-50/20">
+<td class="px-6 py-4">
+<input checked="" class="rounded border-slate-300 text-primary-600 focus:ring-primary-600" type="checkbox"/>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-3">
+<img alt="Lê Văn Tám" class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Portrait of a friendly smiling Asian man with short hair in a casual blue polo shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-Iuvq9PnZewMqqfmkcdlmUN98DG4EgeGef7UuCI2mpPjEkMiOk4j-C0PEMg2VT5jYZkKYnSaPoCAbgv05fDvrZBhqRtc8A5hzaTAuUvKxzLTH0UAQg09ES2_54dRqRXychBxvbgdWbsrbfhzBcNWpVwT5zrg8r6FeulMVPSLzYTV-7VklHHIOqsR3dWDPnwSRWwVOk9uTsDlACsZJpqnlGDyFaPHNdBVBCFU-H5VyOWPWyQfnHoiYRA4Hk_vb7IkpDjBrG-9jIrTC"/>
+<div>
+<p class="font-bold text-slate-900 leading-tight">Lê Văn Tám</p>
+<p class="text-xs text-slate-500">tam.le@vnpremium.vn</p>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 font-medium text-slate-600">NV001</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 text-[11px] font-bold uppercase tracking-wider">Quản lý</span>
+</td>
+<td class="px-4 py-4 text-slate-600">Quận 1</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+<span class="font-medium text-slate-700">Đang làm</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col gap-1">
+<div class="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+<div class="bg-primary-600 h-full w-[85%] rounded-full"></div>
+</div>
+<span class="text-[10px] text-slate-500 font-bold">₫12.5tr</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<input class="rounded border-slate-300 text-primary-600 focus:ring-primary-600" type="checkbox"/>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-3">
+<img alt="Nguyễn Thị Lan" class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Close up of a professional woman with brown hair and light makeup smiling warmly at the camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo5XwIr7iysFMyFeQgkYcvyUaBubYzYf9J8YnFgEj_91hOom1vDvUe-T3lmI1mEcVlNtmiXDnKyaiT0ReE3h0ZaG5tsLct38JezvKE_m8_X_EyQ3v0o90pHaDsAdFcDH_hPwk3L4cXCIas48cHPJ742i-VFqwMdH35tIHRt43ZlZYLGQQeAD-_L4DYZNppqS4xpeuL16szHGxjSP17eFgVpH8sqpaGjZ1ZkyVtQwmdW3LpsN0Lx7G4m9mRkcBslF7OinNqhHSJ0zKI"/>
+<div>
+<p class="font-bold text-slate-900 leading-tight">Nguyễn Thị Lan</p>
+<p class="text-xs text-slate-500">0908 123 456</p>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 font-medium text-slate-600">NV002</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 text-[11px] font-bold uppercase tracking-wider">Thu ngân</span>
+</td>
+<td class="px-4 py-4 text-slate-600">Quận 3</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+<span class="font-medium text-slate-700">Đang làm</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col gap-1">
+<div class="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+<div class="bg-primary-600 h-full w-[60%] rounded-full"></div>
+</div>
+<span class="text-[10px] text-slate-500 font-bold">₫8.2tr</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<input class="rounded border-slate-300 text-primary-600 focus:ring-primary-600" type="checkbox"/>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-3">
+<img alt="Trần Văn Nam" class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Modern professional male with eyeglasses and clean-cut hair looking directly at camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfGXA9ynoebFSqmMeRyDajJKLza6U5bGSgKqFKZwKCUrEAcPLT3sUHMPJNsnezf64Jn7zr-8IgoTigk0Abo4PYnjrOSI0gmKCVTGcXcyz75aFTuIWFyPRudhaZivUIVkQ76rNm2LRQnul6mSrjTEay0t3GcVrt3YezfVgbJou69fgQWjhQ63HytOFRJfXpWCt5mn8tz8D3q3KmCNeaKXsX1SvsPFQp-KnEi5XBbTLqnpBkgome-MtfAiM3XsP9bZLHswwEw6GkW07I"/>
+<div>
+<p class="font-bold text-slate-900 leading-tight">Trần Văn Nam</p>
+<p class="text-xs text-slate-500">nam.tran@vnpremium.vn</p>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 font-medium text-slate-600">NV003</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold uppercase tracking-wider">Bán hàng</span>
+</td>
+<td class="px-4 py-4 text-slate-600">Quận 1</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+<span class="font-medium text-slate-400">Tạm nghỉ</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col gap-1">
+<div class="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+<div class="bg-primary-600 h-full w-[45%] rounded-full"></div>
+</div>
+<span class="text-[10px] text-slate-500 font-bold">₫5.1tr</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bulk Actions Overlay -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-6 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+<span class="text-sm font-bold border-r border-slate-700 pr-6">Đã chọn 01 nhân viên</span>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 text-xs font-bold hover:text-blue-400 transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span> Gán vai trò
+                        </button>
+<button class="flex items-center gap-2 text-xs font-bold hover:text-blue-400 transition-colors">
+<span class="material-symbols-outlined text-lg">sync_alt</span> Đổi chi nhánh
+                        </button>
+<button class="flex items-center gap-2 text-xs font-bold hover:text-orange-400 transition-colors">
+<span class="material-symbols-outlined text-lg">lock</span> Tạm khóa
+                        </button>
+<button class="flex items-center gap-2 text-xs font-bold hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span> Xóa
+                        </button>
+</div>
+</div>
+</div>
+<!-- Side Panel (Preview) -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Preview Drawer Content -->
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-fit sticky top-24">
+<div class="h-24 bg-gradient-to-r from-primary-600 to-blue-400"></div>
+<div class="px-6 pb-6 -mt-12">
+<div class="flex flex-col items-center text-center">
+<img alt="Avatar Large" class="w-24 h-24 rounded-2xl border-4 border-white shadow-md mb-3 object-cover" data-alt="Close up portrait of a smiling young Asian man in a professional setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDab1iH-06SMMbDm4MsdKRu3Zly7EXzTIxO9mHLFuyMuaM1vxmCys8JgHdkS60h2bBdcG9DTMUmXgN_sPXyLkoE0lKRKThuzMVnywzSQpHT-tV1XJ5kjYdJBEqIIwshEY_KkoAfzs7YATzlA7q6E9N-VJmPxu1EjX2r19lkneEx1hV15DSMEbF1YCHG2fLLff_Dmrq-iOY2pMQb6Z7CWvukIy54dEgFIv6XR3jBohxh_Koa7pI1BCxlCMUe3_1hjHpjT2cTtSIa2DSZ"/>
+<h3 class="text-xl font-bold text-slate-900">Lê Văn Tám</h3>
+<p class="text-primary-600 font-bold text-sm">Quản lý chi nhánh</p>
+</div>
+<!-- Info Sections -->
+<div class="mt-8 space-y-6">
+<!-- Tóm tắt hồ sơ -->
+<div>
+<h4 class="text-[11px] uppercase tracking-widest text-slate-400 font-black mb-3">Hồ sơ cá nhân</h4>
+<div class="space-y-3">
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-slate-400">calendar_today</span>
+<span class="text-slate-500">Ngày vào làm:</span>
+<span class="text-slate-900 font-semibold ml-auto">12/05/2023</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-slate-400">call</span>
+<span class="text-slate-500">SĐT:</span>
+<span class="text-slate-900 font-semibold ml-auto">0987 654 321</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-slate-400">location_on</span>
+<span class="text-slate-500">Địa chỉ:</span>
+<span class="text-slate-900 font-semibold ml-auto text-right">Quận 7, TP.HCM</span>
+</div>
+</div>
+</div>
+<!-- Quyền hạn -->
+<div>
+<h4 class="text-[11px] uppercase tracking-widest text-slate-400 font-black mb-3">Quyền hạn</h4>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg">Quản lý kho</span>
+<span class="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg">Chốt doanh số</span>
+<span class="px-3 py-1 bg-primary-50 text-primary-600 text-xs font-bold rounded-lg">Admin</span>
+</div>
+</div>
+<!-- Doanh số 7 ngày -->
+<div>
+<div class="flex items-center justify-between mb-3">
+<h4 class="text-[11px] uppercase tracking-widest text-slate-400 font-black">Doanh số 7 ngày</h4>
+<span class="text-emerald-500 text-xs font-bold">+12%</span>
+</div>
+<div class="flex items-end gap-1.5 h-16 px-1">
+<div class="flex-1 bg-slate-100 rounded-t-sm h-[40%]"></div>
+<div class="flex-1 bg-slate-100 rounded-t-sm h-[60%]"></div>
+<div class="flex-1 bg-primary-200 rounded-t-sm h-[30%]"></div>
+<div class="flex-1 bg-primary-400 rounded-t-sm h-[80%]"></div>
+<div class="flex-1 bg-primary-600 rounded-t-sm h-[100%]"></div>
+<div class="flex-1 bg-primary-300 rounded-t-sm h-[50%]"></div>
+<div class="flex-1 bg-slate-100 rounded-t-sm h-[45%]"></div>
+</div>
+</div>
+<!-- Chấm công -->
+<div>
+<h4 class="text-[11px] uppercase tracking-widest text-slate-400 font-black mb-3">Chấm công gần đây</h4>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
+<div class="text-xs">
+<p class="font-bold">Hôm nay</p>
+<p class="text-slate-500 text-[10px]">14 Th05, 2024</p>
+</div>
+<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">08:05</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
+<div class="text-xs">
+<p class="font-bold">Hôm qua</p>
+<p class="text-slate-500 text-[10px]">13 Th05, 2024</p>
+</div>
+<span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">08:45 (Muộn)</span>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="pt-4 flex gap-3">
+<button class="flex-1 py-2 bg-slate-50 text-slate-700 text-xs font-bold rounded-lg border border-slate-200 hover:bg-slate-100">Đổi vai trò</button>
+<button class="flex-1 py-2 bg-slate-50 text-slate-700 text-xs font-bold rounded-lg border border-slate-200 hover:bg-slate-100">Mật khẩu</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Vai trò & Quyền (Additional Context) -->
+<div class="mt-12">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-slate-900">Vai trò &amp; Phân quyền</h3>
+<button class="text-sm font-bold text-primary-600 hover:underline">Xem tất cả</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-primary-200 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<span class="text-xs font-bold text-slate-400 group-hover:text-blue-600">02 Thành viên</span>
+</div>
+<h4 class="font-bold text-slate-900 mb-1">Quản trị viên</h4>
+<p class="text-xs text-slate-500 mb-4">Có toàn quyền truy cập hệ thống, quản lý tài chính và nhân sự.</p>
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-500 rounded">Full Access</span>
+<span class="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-500 rounded">Billing</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-primary-200 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">point_of_sale</span>
+</div>
+<span class="text-xs font-bold text-slate-400 group-hover:text-orange-600">08 Thành viên</span>
+</div>
+<h4 class="font-bold text-slate-900 mb-1">Thu ngân</h4>
+<p class="text-xs text-slate-500 mb-4">Chỉ có quyền tạo đơn hàng, thanh toán và in hóa đơn tại cửa hàng.</p>
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-500 rounded">Orders</span>
+<span class="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-500 rounded">Cashbox</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-primary-200 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<span class="text-xs font-bold text-slate-400 group-hover:text-emerald-600">12 Thành viên</span>
+</div>
+<h4 class="font-bold text-slate-900 mb-1">Bán hàng</h4>
+<p class="text-xs text-slate-500 mb-4">Quản lý tồn kho, xem thông tin sản phẩm và tư vấn khách hàng.</p>
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-500 rounded">Inventory</span>
+<span class="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-500 rounded">Clients</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Chấm công (Modern Empty State Preview) -->
+<div class="mt-12 bg-white rounded-3xl border border-dashed border-slate-300 p-12 text-center">
+<div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-4xl text-slate-300">nest_cam_wired_stand</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 mb-2">Chưa kết nối máy chấm công</h3>
+<p class="text-slate-500 max-w-sm mx-auto mb-8 text-sm">Kết nối với hệ thống Hikvision hoặc Dahua để tự động hóa việc điểm danh và tính lương nhân sự.</p>
+<button class="px-8 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">
+                Kết nối ngay
+            </button>
+</div>
+</main>
+</body></html>

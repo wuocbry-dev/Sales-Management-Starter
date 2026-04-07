@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Khuyến mãi - VN Premium SaaS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2F6BFF",
+                        secondary: "#14B8A6",
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Be Vietnam Pro"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased font-body">
+<!-- SideNavBar (from JSON) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 bg-white dark:bg-gray-900 h-screen w-64 border-r border-gray-100 dark:border-gray-800 shadow-sm z-50">
+<div class="flex items-center gap-3 px-4 mb-8">
+<div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-blue-600 dark:text-blue-400 leading-none">VN Premium</h1>
+<p class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mt-1">SaaS Dashboard</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto scrollbar-hide">
+<!-- Navigation Items Mapping -->
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-sans antialiased text-sm">Tổng quan</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-sans antialiased text-sm">Bán hàng</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-sans antialiased text-sm">Đơn hàng</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-sans antialiased text-sm">Sản phẩm</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-sans antialiased text-sm">Kho hàng</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-sans antialiased text-sm">Khách hàng</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-sans antialiased text-sm">Nhân viên</span>
+</a>
+<!-- Active Navigation Item: Khuyến mãi -->
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold rounded-xl transition-all duration-200 ease-in-out shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sell</span>
+<span class="font-sans antialiased text-sm">Khuyến mãi</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-sans antialiased text-sm">Báo cáo</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors transition-all duration-200 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800/50" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-sans antialiased text-sm">Cài đặt</span>
+</a>
+</nav>
+<div class="mt-auto p-4 bg-gray-50 rounded-2xl border border-gray-100 flex items-center gap-3">
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" data-alt="Professional Vietnamese male business executive in dark suit smiling in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4klNX0hsdJP290prH0Qeh3p8eVyHHOXUJ3qrtk596YuoABcgAgbw2UHRWeHFW4kquP6wJIadFbusjdbmxvMn7_75Qsg3oOeDTr3NVIXzTB8oXQnO4vd0v2sdrORw_DgR7MO8hGw8oO-BkkAZzIci-yMmLPUemS8rP0E0sSQdtWBkRoqtcDSNg6lxAnWsT12aaqwhxQWKWZLC6dFwSkeseEerMOPPwEDtXIicLtFoYM6zoVP4iEiorKga2z8YtcsMFaa5TfP1vuXMu"/>
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">Trần Hoàng Nam</p>
+<p class="text-[11px] text-gray-500 truncate">Chủ cửa hàng</p>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-sm ml-auto">logout</span>
+</div>
+</aside>
+<!-- TopNavBar (from JSON) -->
+<header class="fixed top-0 right-0 left-64 h-16 flex items-center justify-between px-8 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-sm">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-colors">search</span>
+<input class="w-full bg-gray-50 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-100 transition-all outline-none" placeholder="Tìm kiếm tính năng, báo cáo..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-50 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-50 transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-6 w-[1px] bg-gray-200 mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<span class="text-sm font-medium">Chi nhánh Quận 1</span>
+<span class="material-symbols-outlined text-gray-400">keyboard_arrow_down</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-gray-900">Khuyến mãi</h2>
+<p class="text-gray-500 mt-1">Quản lý các chương trình ưu đãi và chiến dịch marketing toàn hệ thống.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm transition-all">
+<span class="material-symbols-outlined text-lg">ios_share</span>
+                    Xuất báo cáo
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-blue-100 rounded-xl text-sm font-semibold text-blue-600 hover:bg-blue-50 shadow-sm transition-all">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                    Tạo mã giảm giá
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 rounded-xl text-sm font-bold text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
+<span class="material-symbols-outlined text-lg">campaign</span>
+                    Tạo khuyến mãi
+                </button>
+</div>
+</div>
+<!-- Summary Metric Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<span class="text-[11px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">+12% vs t.trước</span>
+</div>
+<h3 class="text-sm font-medium text-gray-500">Đang chạy</h3>
+<p class="text-2xl font-extrabold mt-1">12</p>
+<div class="mt-4 h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-[65%]"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+</div>
+<h3 class="text-sm font-medium text-gray-500">Sắp bắt đầu</h3>
+<p class="text-2xl font-extrabold mt-1">5</p>
+<div class="mt-4 h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-amber-500 w-[20%]"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-gray-100 text-gray-600 rounded-lg">
+<span class="material-symbols-outlined">event_available</span>
+</div>
+</div>
+<h3 class="text-sm font-medium text-gray-500">Kết thúc</h3>
+<p class="text-2xl font-extrabold mt-1">48</p>
+<div class="mt-4 h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-gray-400 w-full"></div>
+</div>
+</div>
+<div class="bg-blue-600 p-6 rounded-xl shadow-lg shadow-blue-200 text-white hover:bg-blue-700 transition-colors">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-white/20 text-white rounded-lg">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="text-[11px] font-bold px-2 py-0.5 bg-white/20 text-white rounded-full">Kỷ lục mới</span>
+</div>
+<h3 class="text-sm font-medium text-blue-100">Doanh thu từ KM</h3>
+<p class="text-2xl font-extrabold mt-1">₫1.250.000.000</p>
+<div class="flex items-center gap-1 mt-4 text-[11px] font-medium text-blue-100">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>Tăng 240tr so với tháng trước</span>
+</div>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex border-b border-gray-100 mb-6 gap-8">
+<button class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-all">Chiến dịch</button>
+<button class="pb-4 text-sm font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent transition-all">Mã giảm giá</button>
+<button class="pb-4 text-sm font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent transition-all">Voucher đối tác</button>
+<button class="pb-4 text-sm font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent transition-all">Cài đặt</button>
+</div>
+<!-- Filter Bar -->
+<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[240px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-50 border-transparent focus:bg-white focus:border-blue-500 focus:ring-0 text-sm transition-all" placeholder="Tìm tên chiến dịch..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<select class="text-sm bg-gray-50 border-none rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-100">
+<option>Trạng thái: Tất cả</option>
+<option>Đang chạy</option>
+<option>Nháp</option>
+<option>Tạm dừng</option>
+<option>Kết thúc</option>
+</select>
+<select class="text-sm bg-gray-50 border-none rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-100">
+<option>Kênh: Tất cả</option>
+<option>POS</option>
+<option>Online</option>
+<option>Shopee</option>
+</select>
+<select class="text-sm bg-gray-50 border-none rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-100">
+<option>Chi nhánh: Tất cả</option>
+<option>Quận 1</option>
+<option>Quận 7</option>
+<option>Thủ Đức</option>
+</select>
+<button class="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+                    Thời gian
+                </button>
+</div>
+</div>
+<!-- Campaign Table -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-gray-50/50 border-b border-gray-100">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Tên chiến dịch</th>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Loại</th>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Thời gian</th>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Phạm vi / Kênh</th>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Ngân sách</th>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Hiệu quả</th>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Trạng thái</th>
+<th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100">
+<!-- Row 1 -->
+<tr class="group hover:bg-blue-50/30 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100">
+<img class="w-full h-full object-cover" data-alt="Modern high-end summer lifestyle items arranged artistically on a bright beach-themed surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0zrge3kSYFmyZv8TXGe1sOAORV1x6GWSYw0ih6F_tp7xkD-jU2sTQx6ye78BvvDn_rHV9Y5X1Z5plK6Xnmm9yHCQdBKDXnkhInNlnlDse-YAM6hIzuDuMVxA4VUocB85SsdD-K3_OQZ0ZNEZCEjZTNoscruExz8EW0k0EJuWIpAUKFc8ds3SPfvCVn5uKjN_V54xqoyC-3S2fi_-bh92x7ECa832s7zVXoDLly8wGtVGUyUHpPqK3M-ChHoU0eKaP85L0vTZw9_0y"/>
+</div>
+<span class="font-bold text-gray-900">Sale Hè Rực Rỡ</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm px-2 py-1 bg-blue-50 text-blue-600 rounded-md font-medium border border-blue-100">Giảm %</span>
+</td>
+<td class="px-6 py-4">
+<div class="text-sm text-gray-900">01/06 - 30/06</div>
+<div class="text-[11px] text-gray-500">Cần 12 ngày nữa</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-full">Q1</span>
+<span class="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">Shopee</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-sm font-bold text-gray-900">₫50.000.000</div>
+<div class="text-[10px] text-gray-500 font-medium">Đã dùng 65%</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col items-center">
+<div class="text-sm font-bold text-emerald-600">1.2k đơn</div>
+<div class="text-[11px] font-semibold text-gray-500">₫450.000.000</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full w-fit border border-emerald-100">
+<span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+<span class="text-xs font-bold">Đang chạy</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-blue-600 font-bold text-sm hover:underline">Xem chi tiết</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-blue-50/30 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100">
+<img class="w-full h-full object-cover" data-alt="Bright red and white promotional flash sale graphic with floating price tags and energetic composition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOdG62CxKkENIloKxmVklnASOMAMue3psunFq6HydNOnca2hkD9VISOIeRjem-vOkoT-DJgvMn8K1NkI2FwCqSBZk3BznlQb0lPAYw3HRXaf8GGugDBGCHd9p6XsVBLvBpHpI8k7IQwvFlhbgRgYKUPWGF6V_1AoxC6R-rB6MSe0YtUSUiedT--Wqqi55g75menZTBQqxVSjdnXTsIlsZE14GBAscFb8VxWHO4skBoAmXpcbpt5h_XJZK5kCT-iNw60VU2toe0c31z"/>
+</div>
+<span class="font-bold text-gray-900">Flash Sale 6.6</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm px-2 py-1 bg-purple-50 text-purple-600 rounded-md font-medium border border-purple-100">Giảm tiền</span>
+</td>
+<td class="px-6 py-4">
+<div class="text-sm text-gray-900">06/06 - 06/06</div>
+<div class="text-[11px] text-gray-500">Chỉ 1 ngày duy nhất</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-full">Tất cả</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-sm font-bold text-gray-900">₫20.000.000</div>
+<div class="text-[10px] text-gray-500 font-medium">Chưa sử dụng</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col items-center">
+<div class="text-sm font-bold text-gray-400">0 đơn</div>
+<div class="text-[11px] font-semibold text-gray-400">₫0</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-amber-600 bg-amber-50 px-3 py-1 rounded-full w-fit border border-amber-100">
+<span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+<span class="text-xs font-bold">Chờ</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-blue-600 font-bold text-sm hover:underline">Xem chi tiết</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-blue-50/30 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100">
+<img class="w-full h-full object-cover" data-alt="Close-up of a delicious and healthy lunch combo meal on a rustic wooden table with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCygTgPUubxfl_CUl2ix4iYe2YcATa1zzDZc3ZzPhgdRzZptJlwz0jfZD2Ek8F-2GICb8XRvo58ncn9i3_qy03jFQTLMBOevdeh0gHVHMRo524ZxB_eKfiTcTJlreKCCLyXK4MQGPBtbecer0HG5xTpF4UvSK_1yDRBLnS3cHndwWyHFMtf2WUYtkvtlfLQccnFFdEbTTnXPexS9KTLELxZYTgjHJO_J_JGFNx-JbpUybLM6peIiJZm2EQDTLsx3yyVnPOldZUCjEx8"/>
+</div>
+<span class="font-bold text-gray-900">Combo Bữa Trưa Tiết Kiệm</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm px-2 py-1 bg-teal-50 text-teal-600 rounded-md font-medium border border-teal-100">Combo</span>
+</td>
+<td class="px-6 py-4">
+<div class="text-sm text-gray-900">01/05 - 31/05</div>
+<div class="text-[11px] text-gray-500">Đã hết hạn</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-bold rounded-full">POS</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-sm font-bold text-gray-900">₫15.000.000</div>
+<div class="text-[10px] text-gray-500 font-medium">Đã dùng 98%</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col items-center">
+<div class="text-sm font-bold text-gray-600">850 đơn</div>
+<div class="text-[11px] font-semibold text-gray-500">₫120.000.000</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-gray-500 bg-gray-100 px-3 py-1 rounded-full w-fit border border-gray-200">
+<span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+<span class="text-xs font-bold">Kết thúc</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-blue-600 font-bold text-sm hover:underline">Xem chi tiết</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+<span class="text-xs font-medium text-gray-500">Hiển thị 1 - 10 trên tổng số 65 chiến dịch</span>
+<div class="flex items-center gap-2">
+<button class="p-2 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-gray-900 transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-lg text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center bg-white border border-gray-200 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50">2</button>
+<button class="w-8 h-8 flex items-center justify-center bg-white border border-gray-200 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50">3</button>
+<span class="text-gray-400">...</span>
+<button class="w-8 h-8 flex items-center justify-center bg-white border border-gray-200 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50">7</button>
+<button class="p-2 bg-white border border-gray-200 rounded-lg text-gray-400 hover:text-gray-900 transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>
