@@ -1,10 +1,18 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../api/authApi";
+import { useAuth } from "../hooks/useAuth";
+
+type AxiosLikeError = {
+  code?: string;
+  message?: string;
+  response?: { status?: number; data?: { message?: string } };
+};
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("admin");
+  const { setAccessToken, refreshMe } = useAuth();
+  const [usernameOrEmail, setUsernameOrEmail] = useState("admin");
   const [password, setPassword] = useState("admin123");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,14 +23,17 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await loginApi({ username, password });
-      const data = result.data;
+      const res = await loginApi({ usernameOrEmail, password });
+      if (!res.success || !res.data?.accessToken) {
+        setError(res.message || "Đăng nhập thất bại.");
+        return;
+      }
 
-      localStorage.setItem("access_token", data.accessToken);
-      localStorage.setItem("user_info", JSON.stringify(data));
+      setAccessToken(res.data.accessToken);
+      await refreshMe();
       navigate("/app");
     } catch (err: unknown) {
-      const ax = err as { code?: string; message?: string; response?: { status?: number; data?: { message?: string } } };
+      const ax = err as AxiosLikeError;
       const noResponse = !ax.response;
       const refused =
         ax.code === "ERR_NETWORK" ||
@@ -46,16 +57,23 @@ function LoginPage() {
     <div className="space-y-5">
       <div>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Đăng nhập</h2>
-        <p className="text-sm text-slate-500 mt-1">Dùng `admin/admin123` hoặc `manager/manager123`.</p>
+        <p className="text-sm text-slate-500 mt-1">
+          Dùng <span className="font-semibold">admin/admin123</span>,{" "}
+          <span className="font-semibold">manager01/manager123</span>, hoặc{" "}
+          <span className="font-semibold">cashier01/cashier123</span>.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="text-xs font-black text-slate-500 uppercase tracking-wider">Username</label>
+          <label className="text-xs font-black text-slate-500 uppercase tracking-wider">
+            Username / Email
+          </label>
           <input
             className="mt-1 w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={usernameOrEmail}
+            onChange={(e) => setUsernameOrEmail(e.target.value)}
+            autoComplete="username"
           />
         </div>
 
@@ -66,6 +84,7 @@ function LoginPage() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
           />
         </div>
 

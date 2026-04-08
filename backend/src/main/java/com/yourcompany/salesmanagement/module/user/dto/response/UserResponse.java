@@ -4,6 +4,6 @@ public record UserResponse(
         Long id,
         String username,
         String fullName,
-        String role,
-        String status
+        String status,
+        java.util.List<String> roleCodes
 ) {}
