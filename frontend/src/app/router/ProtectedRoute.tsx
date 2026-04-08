@@ -12,7 +12,7 @@ function ProtectedRoute({ children }: Props) {
 
   if (isLoading) return null;
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

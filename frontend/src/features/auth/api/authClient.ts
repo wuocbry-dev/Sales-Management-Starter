@@ -1,10 +1,10 @@
 import axios from "axios";
 
 function resolveAuthBaseUrl() {
-  const configured = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1";
-  // If project uses /api/v1 for business APIs, auth is /api
-  const replaced = configured.replace(/\/api\/v1\/?$/i, "/api");
-  return replaced.endsWith("/api") ? replaced : "http://localhost:8080/api";
+  const configured = import.meta.env.VITE_API_BASE_URL || "/api/v1";
+  // Backend supports both `/api/v1/auth/*` and legacy `/api/auth/*`
+  const replaced = configured.replace(/\/api\/v1\/?$/i, "/api/v1");
+  return replaced;
 }
 
 export const authClient = axios.create({

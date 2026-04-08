@@ -1,11 +1,12 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 
 function DashboardLayout() {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user_info");
+    logout();
     navigate("/");
   };
 
@@ -214,8 +215,10 @@ function DashboardLayout() {
             <div className="h-8 w-px bg-slate-200 mx-1" />
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold leading-tight">Admin VN</p>
-                <p className="text-[11px] text-slate-500 font-semibold">Quản trị viên</p>
+                <p className="text-sm font-bold leading-tight">{user?.fullName || user?.username || "—"}</p>
+                <p className="text-[11px] text-slate-500 font-semibold">
+                  {(user?.roleCodes?.[0] || "USER").toString()}
+                </p>
               </div>
               <div className="w-9 h-9 rounded-full bg-slate-200 border border-white shadow-sm" />
             </div>
