@@ -97,10 +97,28 @@ public class SalesOrderServiceImpl implements SalesOrderService {
         salesOrderItemRepository.saveAll(items);
 
         recalculateTotals(so.getId());
-        SalesOrder refreshed = salesOrderRepository.findByIdAndStoreId(so.getId(), storeId)
+
+        // MVP POS: validate stock and deduct immediately on create
+        SalesOrder pending = salesOrderRepository.findByIdAndStoreId(so.getId(), storeId)
                 .orElseThrow(() -> new BusinessException("Sales order not found", HttpStatus.NOT_FOUND));
         List<SalesOrderItem> savedItems = salesOrderItemRepository.findAllBySalesOrderId(so.getId());
-        return toDetail(refreshed, savedItems);
+        validateAndDeductInventory(storeId, pending.getBranchId(), savedItems);
+
+        pending.setStatus(STATUS_COMPLETED);
+        salesOrderRepository.save(pending);
+
+        // Customer & loyalty (MVP): only when customerId is present
+        if (pending.getCustomerId() != null) {
+            int earnedPoints = calculateEarnedPoints(pending.getTotalAmount());
+            customerService.applyPurchase(pending.getCustomerId(), pending.getTotalAmount(), earnedPoints, pending.getOrderedAt());
+            loyaltyService.earnPointsForSalesOrder(pending.getCustomerId(), pending.getId(), earnedPoints,
+                    "Earn points from order " + pending.getOrderNumber());
+        }
+
+        SalesOrder refreshed = salesOrderRepository.findByIdAndStoreId(pending.getId(), storeId)
+                .orElseThrow(() -> new BusinessException("Sales order not found", HttpStatus.NOT_FOUND));
+        List<SalesOrderItem> finalItems = salesOrderItemRepository.findAllBySalesOrderId(pending.getId());
+        return toDetail(refreshed, finalItems);
     }
 
     @Override
@@ -141,6 +159,33 @@ public class SalesOrderServiceImpl implements SalesOrderService {
         }
 
         Long branchId = so.getBranchId();
+        validateAndDeductInventory(storeId, branchId, items);
+
+        so.setStatus(STATUS_COMPLETED);
+        salesOrderRepository.save(so);
+
+        // Customer & loyalty (MVP): only when customerId is present
+        if (so.getCustomerId() != null) {
+            int earnedPoints = calculateEarnedPoints(so.getTotalAmount());
+            customerService.applyPurchase(so.getCustomerId(), so.getTotalAmount(), earnedPoints, so.getOrderedAt());
+            loyaltyService.earnPointsForSalesOrder(so.getCustomerId(), so.getId(), earnedPoints,
+                    "Earn points from order " + so.getOrderNumber());
+        }
+
+        SalesOrder refreshed = salesOrderRepository.findByIdAndStoreId(id, storeId)
+                .orElseThrow(() -> new BusinessException("Sales order not found", HttpStatus.NOT_FOUND));
+        List<SalesOrderItem> refreshedItems = salesOrderItemRepository.findAllBySalesOrderId(id);
+        return toDetail(refreshed, refreshedItems);
+    }
+
+    private int calculateEarnedPoints(BigDecimal totalAmount) {
+        if (totalAmount == null) return 0;
+        // MVP rule: 1 point per 1,000 VND, floor
+        BigDecimal points = totalAmount.setScale(0, RoundingMode.DOWN).divide(BigDecimal.valueOf(1000), RoundingMode.DOWN);
+        return Math.max(0, points.intValue());
+    }
+
+    private void validateAndDeductInventory(Long storeId, Long branchId, List<SalesOrderItem> items) {
         Map<InventoryKey, BigDecimal> required = new HashMap<>();
         for (SalesOrderItem item : items) {
             InventoryKey key = new InventoryKey(item.getProductId(), item.getVariantId());
@@ -172,29 +217,6 @@ public class SalesOrderServiceImpl implements SalesOrderService {
             inv.setQuantity(inv.getQuantity().subtract(qty).setScale(2, RoundingMode.HALF_UP));
             inventoryRepository.save(inv);
         }
-
-        so.setStatus(STATUS_COMPLETED);
-        salesOrderRepository.save(so);
-
-        // Customer & loyalty (MVP): only when customerId is present
-        if (so.getCustomerId() != null) {
-            int earnedPoints = calculateEarnedPoints(so.getTotalAmount());
-            customerService.applyPurchase(so.getCustomerId(), so.getTotalAmount(), earnedPoints, so.getOrderedAt());
-            loyaltyService.earnPointsForSalesOrder(so.getCustomerId(), so.getId(), earnedPoints,
-                    "Earn points from order " + so.getOrderNumber());
-        }
-
-        SalesOrder refreshed = salesOrderRepository.findByIdAndStoreId(id, storeId)
-                .orElseThrow(() -> new BusinessException("Sales order not found", HttpStatus.NOT_FOUND));
-        List<SalesOrderItem> refreshedItems = salesOrderItemRepository.findAllBySalesOrderId(id);
-        return toDetail(refreshed, refreshedItems);
-    }
-
-    private int calculateEarnedPoints(BigDecimal totalAmount) {
-        if (totalAmount == null) return 0;
-        // MVP rule: 1 point per 1,000 VND, floor
-        BigDecimal points = totalAmount.setScale(0, RoundingMode.DOWN).divide(BigDecimal.valueOf(1000), RoundingMode.DOWN);
-        return Math.max(0, points.intValue());
     }
 
     private List<SalesOrderItem> buildItems(Long storeId, Long salesOrderId, List<CreateSalesOrderItemRequest> reqItems) {

@@ -2,7 +2,10 @@ package com.yourcompany.salesmanagement.module.user.controller;
 
 import com.yourcompany.salesmanagement.common.base.BaseResponse;
 import com.yourcompany.salesmanagement.module.user.dto.request.AssignRolesRequest;
+import com.yourcompany.salesmanagement.module.user.dto.request.ChangeMyPasswordRequest;
 import com.yourcompany.salesmanagement.module.user.dto.request.CreateUserRequest;
+import com.yourcompany.salesmanagement.module.user.dto.request.ResetPasswordRequest;
+import com.yourcompany.salesmanagement.module.user.dto.request.UpdateUserRequest;
 import com.yourcompany.salesmanagement.module.user.dto.response.UserDetailResponse;
 import com.yourcompany.salesmanagement.module.user.dto.response.UserResponse;
 import com.yourcompany.salesmanagement.module.user.service.UserService;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping({"/api/v1/users", "/api/users"})
 public class UserController {
 
     private final UserService userService;
@@ -42,8 +45,30 @@ public class UserController {
         return BaseResponse.ok("User created successfully", userService.createUser(request));
     }
 
+    @PutMapping("/{id}")
+    public BaseResponse<UserDetailResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
+        return BaseResponse.ok("User updated successfully", userService.updateUser(id, request));
+    }
+
+    @PostMapping("/{id}/roles")
+    public BaseResponse<UserDetailResponse> assignRolesPost(@PathVariable Long id, @Valid @RequestBody AssignRolesRequest request) {
+        return BaseResponse.ok("Roles assigned successfully", userService.assignRoles(id, request));
+    }
+
     @PutMapping("/{id}/roles")
     public BaseResponse<UserDetailResponse> assignRoles(@PathVariable Long id, @Valid @RequestBody AssignRolesRequest request) {
         return BaseResponse.ok("Roles assigned successfully", userService.assignRoles(id, request));
+    }
+
+    @PutMapping("/me/password")
+    public BaseResponse<Void> changeMyPassword(@Valid @RequestBody ChangeMyPasswordRequest request) {
+        userService.changeMyPassword(request);
+        return BaseResponse.ok("Password changed successfully", null);
+    }
+
+    @PutMapping("/{id}/reset-password")
+    public BaseResponse<Void> adminResetPassword(@PathVariable Long id, @Valid @RequestBody ResetPasswordRequest request) {
+        userService.adminResetPassword(id, request);
+        return BaseResponse.ok("Password reset successfully", null);
     }
 }

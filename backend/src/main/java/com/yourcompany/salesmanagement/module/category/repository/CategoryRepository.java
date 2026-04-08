@@ -10,5 +10,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findFirstByStoreIdAndNameIgnoreCase(Long storeId, String name);
 
     List<Category> findAllByStoreId(Long storeId);
+
+    Optional<Category> findByIdAndStoreId(Long id, Long storeId);
 }
 

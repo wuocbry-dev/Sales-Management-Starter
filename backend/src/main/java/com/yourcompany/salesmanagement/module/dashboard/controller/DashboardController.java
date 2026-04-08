@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/dashboard")
+@RequestMapping({"/api/v1/dashboard", "/api/dashboard"})
 public class DashboardController {
 
     private final DashboardService dashboardService;
@@ -27,8 +27,8 @@ public class DashboardController {
     }
 
     @GetMapping("/summary")
-    public BaseResponse<DashboardSummaryResponse> getSummary() {
-        return BaseResponse.ok("Dashboard summary fetched successfully", dashboardService.getSummary());
+    public BaseResponse<DashboardSummaryResponse> getSummary(@RequestParam(required = false) Long branchId) {
+        return BaseResponse.ok("Dashboard summary fetched successfully", dashboardService.getSummary(branchId));
     }
 
     @GetMapping("/sales-daily-summary")

@@ -24,5 +24,13 @@ public final class SecurityUtils {
         }
         return storeId;
     }
+
+    public static Long requireBranchId() {
+        Long branchId = requirePrincipal().branchId();
+        if (branchId == null) {
+            throw new BusinessException("Branch context is required for this operation", HttpStatus.BAD_REQUEST);
+        }
+        return branchId;
+    }
 }
 

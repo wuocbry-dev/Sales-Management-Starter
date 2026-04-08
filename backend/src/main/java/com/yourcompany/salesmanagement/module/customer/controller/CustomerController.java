@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping({"/api/v1/customers", "/api/customers"})
 public class CustomerController {
     private final CustomerService customerService;
 
@@ -37,6 +37,12 @@ public class CustomerController {
     @PutMapping("/{id}")
     public BaseResponse<CustomerResponse> update(@PathVariable Long id, @Valid @RequestBody UpdateCustomerRequest request) {
         return BaseResponse.ok("Customer updated successfully", customerService.update(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public BaseResponse<Void> delete(@PathVariable Long id) {
+        customerService.delete(id);
+        return BaseResponse.ok("Customer deleted successfully", null);
     }
 }
 

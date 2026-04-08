@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/loyalty")
+@RequestMapping({"/api/v1/loyalty", "/api/loyalty"})
 public class LoyaltyController {
     private final LoyaltyService loyaltyService;
 

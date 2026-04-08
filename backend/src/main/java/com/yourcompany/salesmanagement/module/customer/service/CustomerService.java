@@ -17,6 +17,8 @@ public interface CustomerService {
 
     CustomerResponse update(Long id, UpdateCustomerRequest request);
 
+    void delete(Long id);
+
     void applyPurchase(Long customerId, BigDecimal amount, int earnedPoints, LocalDateTime orderedAt);
 }
 

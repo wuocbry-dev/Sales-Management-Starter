@@ -3,6 +3,7 @@ package com.yourcompany.salesmanagement.module.branch.service.impl;
 import com.yourcompany.salesmanagement.common.security.SecurityUtils;
 import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.branch.dto.request.CreateBranchRequest;
+import com.yourcompany.salesmanagement.module.branch.dto.request.UpdateBranchRequest;
 import com.yourcompany.salesmanagement.module.branch.dto.response.BranchResponse;
 import com.yourcompany.salesmanagement.module.branch.entity.Branch;
 import com.yourcompany.salesmanagement.module.branch.repository.BranchRepository;
@@ -29,6 +30,14 @@ public class BranchServiceImpl implements com.yourcompany.salesmanagement.module
     }
 
     @Override
+    public BranchResponse getById(Long id) {
+        Long storeId = SecurityUtils.requireStoreId();
+        Branch branch = branchRepository.findByIdAndStoreId(id, storeId)
+                .orElseThrow(() -> new BusinessException("Branch not found", HttpStatus.NOT_FOUND));
+        return toResponse(branch);
+    }
+
+    @Override
     public BranchResponse createBranch(CreateBranchRequest request) {
         Long storeId = SecurityUtils.requireStoreId();
         Branch branch = new Branch();
@@ -36,6 +45,18 @@ public class BranchServiceImpl implements com.yourcompany.salesmanagement.module
         branch.setName(request.name());
         branch.setCode(request.code());
         branch.setIsDefault(false);
+        branch = branchRepository.save(branch);
+        return toResponse(branch);
+    }
+
+    @Override
+    @Transactional
+    public BranchResponse update(Long id, UpdateBranchRequest request) {
+        Long storeId = SecurityUtils.requireStoreId();
+        Branch branch = branchRepository.findByIdAndStoreId(id, storeId)
+                .orElseThrow(() -> new BusinessException("Branch not found", HttpStatus.NOT_FOUND));
+        branch.setName(request.name());
+        branch.setCode(request.code());
         branch = branchRepository.save(branch);
         return toResponse(branch);
     }

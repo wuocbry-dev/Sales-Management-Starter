@@ -83,6 +83,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
+    public void delete(Long id) {
+        Long storeId = SecurityUtils.requireStoreId();
+        Customer c = customerRepository.findByIdAndStoreId(id, storeId)
+                .orElseThrow(() -> new BusinessException("Customer not found", HttpStatus.NOT_FOUND));
+        c.setStatus("INACTIVE");
+        customerRepository.save(c);
+    }
+
+    @Override
+    @Transactional
     public void applyPurchase(Long customerId, BigDecimal amount, int earnedPoints, LocalDateTime orderedAt) {
         Long storeId = SecurityUtils.requireStoreId();
         Customer c = customerRepository.findByIdAndStoreId(customerId, storeId)

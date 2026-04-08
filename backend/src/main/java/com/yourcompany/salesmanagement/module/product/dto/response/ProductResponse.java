@@ -2,10 +2,11 @@ package com.yourcompany.salesmanagement.module.product.dto.response;
 
 public record ProductResponse(
         Long id,
-        String code,
+        String sku,
         String name,
-        String category,
-        Double price,
-        Integer stock,
+        Long categoryId,
+        String categoryName,
+        Double sellingPrice,
+        Boolean trackInventory,
         String status
 ) {}

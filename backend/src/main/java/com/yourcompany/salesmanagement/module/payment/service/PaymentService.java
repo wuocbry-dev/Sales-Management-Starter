@@ -9,6 +9,8 @@ import java.util.List;
 public interface PaymentService {
     PaymentResponse createPayment(CreatePaymentRequest request);
 
+    PaymentResponse getById(Long id);
+
     List<PaymentResponse> getPaymentsBySalesOrderId(Long salesOrderId);
 
     OrderPaymentStatusResponse getOrderPaymentStatus(Long salesOrderId);

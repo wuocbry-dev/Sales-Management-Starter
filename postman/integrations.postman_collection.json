@@ -1,0 +1,143 @@
+{
+  "info": {
+    "_postman_id": "f1a8f2f4-1e6e-4e2f-9a0c-8b3d3e3b5c2a",
+    "name": "Sales Management - Integrations (Channels & Product Mappings)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Integrations",
+      "item": [
+        {
+          "name": "GET /api/integrations/channels",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/integrations/channels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "integrations",
+                "channels"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/integrations/channels",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"channelType\": \"WEBSTORE\",\n  \"channelName\": \"Website chinh\",\n  \"channelCode\": \"WEB_MAIN\",\n  \"status\": \"ACTIVE\",\n  \"configJson\": \"{\\\"baseUrl\\\":\\\"https://shop.example.com\\\",\\\"webhookSecret\\\":\\\"demo\\\"}\"\n}\n"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/integrations/channels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "integrations",
+                "channels"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/integrations/product-mappings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/integrations/product-mappings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "integrations",
+                "product-mappings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/integrations/product-mappings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"channelId\": 1,\n  \"productId\": 3,\n  \"variantId\": 5,\n  \"externalProductId\": \"shopee_123\",\n  \"externalVariantId\": \"shopee_var_456\",\n  \"externalSku\": \"SHOPEE-SKU-001\",\n  \"status\": \"ACTIVE\"\n}\n"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/integrations/product-mappings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "integrations",
+                "product-mappings"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    }
+  ]
+}
+

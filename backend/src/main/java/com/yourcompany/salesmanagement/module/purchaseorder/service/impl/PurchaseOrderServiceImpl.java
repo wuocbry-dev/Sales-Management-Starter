@@ -5,6 +5,8 @@ import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.auth.service.dto.UserPrincipal;
 import com.yourcompany.salesmanagement.module.branch.repository.BranchRepository;
 import com.yourcompany.salesmanagement.module.inventory.entity.Inventory;
+import com.yourcompany.salesmanagement.module.inventory.entity.InventoryMovement;
+import com.yourcompany.salesmanagement.module.inventory.repository.InventoryMovementRepository;
 import com.yourcompany.salesmanagement.module.inventory.repository.InventoryRepository;
 import com.yourcompany.salesmanagement.module.product.repository.ProductRepository;
 import com.yourcompany.salesmanagement.module.purchaseorder.dto.request.AddPurchaseOrderItemRequest;
@@ -48,6 +50,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final ProductRepository productRepository;
     private final ProductVariantRepository productVariantRepository;
     private final InventoryRepository inventoryRepository;
+    private final InventoryMovementRepository inventoryMovementRepository;
 
     public PurchaseOrderServiceImpl(
             PurchaseOrderRepository purchaseOrderRepository,
@@ -56,7 +59,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
             BranchRepository branchRepository,
             ProductRepository productRepository,
             ProductVariantRepository productVariantRepository,
-            InventoryRepository inventoryRepository) {
+            InventoryRepository inventoryRepository,
+            InventoryMovementRepository inventoryMovementRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseOrderItemRepository = purchaseOrderItemRepository;
         this.supplierRepository = supplierRepository;
@@ -64,6 +68,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         this.productRepository = productRepository;
         this.productVariantRepository = productVariantRepository;
         this.inventoryRepository = inventoryRepository;
+        this.inventoryMovementRepository = inventoryMovementRepository;
     }
 
     @Override
@@ -93,7 +98,27 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         po.setCreatedBy(principal.userId());
         po = purchaseOrderRepository.save(po);
 
-        return toDetail(po, List.of());
+        List<PurchaseOrderItem> items = new ArrayList<>();
+        if (request.items() != null && !request.items().isEmpty()) {
+            for (AddPurchaseOrderItemRequest lineReq : request.items()) {
+                items.add(addItemInternal(storeId, po, lineReq));
+            }
+            recalculateTotals(po.getId());
+            items = purchaseOrderItemRepository.findAllByPurchaseOrderId(po.getId());
+
+            boolean receiveNow = request.receiveNow() == null || request.receiveNow();
+            if (receiveNow) {
+                receive(po.getId(), null);
+                PurchaseOrder refreshed = purchaseOrderRepository.findByIdAndStoreId(po.getId(), storeId)
+                        .orElseThrow(() -> new BusinessException("Purchase order not found", HttpStatus.NOT_FOUND));
+                items = purchaseOrderItemRepository.findAllByPurchaseOrderId(po.getId());
+                return toDetail(refreshed, items);
+            }
+        }
+
+        PurchaseOrder refreshed = purchaseOrderRepository.findByIdAndStoreId(po.getId(), storeId)
+                .orElseThrow(() -> new BusinessException("Purchase order not found", HttpStatus.NOT_FOUND));
+        return toDetail(refreshed, items);
     }
 
     @Override
@@ -124,6 +149,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
             throw new BusinessException("Items can only be added while purchase order is DRAFT", HttpStatus.BAD_REQUEST);
         }
 
+        addItemInternal(storeId, po, request);
+
+        recalculateTotals(po.getId());
+        PurchaseOrder refreshed = purchaseOrderRepository.findByIdAndStoreId(po.getId(), storeId)
+                .orElseThrow(() -> new BusinessException("Purchase order not found", HttpStatus.NOT_FOUND));
+        List<PurchaseOrderItem> items = purchaseOrderItemRepository.findAllByPurchaseOrderId(po.getId());
+        return toDetail(refreshed, items);
+    }
+
+    private PurchaseOrderItem addItemInternal(Long storeId, PurchaseOrder po, AddPurchaseOrderItemRequest request) {
         productRepository.findByIdAndStoreId(request.productId(), storeId)
                 .orElseThrow(() -> new BusinessException("Product not found", HttpStatus.NOT_FOUND));
 
@@ -145,19 +180,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         line.setReceivedQuantity(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
         line.setCostPrice(costPrice);
         line.setLineTotal(lineTotal);
-        purchaseOrderItemRepository.save(line);
-
-        recalculateTotals(po.getId());
-        PurchaseOrder refreshed = purchaseOrderRepository.findByIdAndStoreId(po.getId(), storeId)
-                .orElseThrow(() -> new BusinessException("Purchase order not found", HttpStatus.NOT_FOUND));
-        List<PurchaseOrderItem> items = purchaseOrderItemRepository.findAllByPurchaseOrderId(po.getId());
-        return toDetail(refreshed, items);
+        return purchaseOrderItemRepository.save(line);
     }
 
     @Override
     @Transactional
     public PurchaseOrderDetailResponse receive(Long purchaseOrderId, ReceivePurchaseOrderRequest request) {
         Long storeId = SecurityUtils.requireStoreId();
+        Long userId = SecurityUtils.requirePrincipal().userId();
         PurchaseOrder po = purchaseOrderRepository.findByIdAndStoreId(purchaseOrderId, storeId)
                 .orElseThrow(() -> new BusinessException("Purchase order not found", HttpStatus.NOT_FOUND));
 
@@ -218,7 +248,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 throw new BusinessException("Cannot receive more than remaining for item " + item.getId(), HttpStatus.BAD_REQUEST);
             }
 
-            addToInventory(storeId, branchId, item.getProductId(), item.getVariantId(), toReceive);
+            addToInventory(storeId, branchId, item.getProductId(), item.getVariantId(), toReceive,
+                    "PO_RECEIVE", "purchase_order", po.getId(),
+                    "PO " + po.getPoNumber() + " receive item " + item.getId(), userId);
 
             item.setReceivedQuantity(item.getReceivedQuantity().add(toReceive).setScale(2, RoundingMode.HALF_UP));
             purchaseOrderItemRepository.save(item);
@@ -232,7 +264,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         return toDetail(refreshed, items);
     }
 
-    private void addToInventory(Long storeId, Long branchId, Long productId, Long variantId, BigDecimal delta) {
+    private void addToInventory(
+            Long storeId,
+            Long branchId,
+            Long productId,
+            Long variantId,
+            BigDecimal delta,
+            String movementType,
+            String referenceType,
+            Long referenceId,
+            String note,
+            Long createdBy) {
         Inventory inv;
         if (variantId == null) {
             inv = inventoryRepository
@@ -245,8 +287,24 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         }
 
         BigDecimal current = inv.getQuantity() == null ? BigDecimal.ZERO : inv.getQuantity();
-        inv.setQuantity(current.add(delta).setScale(2, RoundingMode.HALF_UP));
+        BigDecimal next = current.add(delta).setScale(2, RoundingMode.HALF_UP);
+        inv.setQuantity(next);
         inventoryRepository.save(inv);
+
+        InventoryMovement m = new InventoryMovement();
+        m.setStoreId(storeId);
+        m.setBranchId(branchId);
+        m.setProductId(productId);
+        m.setVariantId(variantId);
+        m.setMovementType(movementType);
+        m.setReferenceType(referenceType);
+        m.setReferenceId(referenceId);
+        m.setDeltaQuantity(delta);
+        m.setBeforeQuantity(current.setScale(2, RoundingMode.HALF_UP));
+        m.setAfterQuantity(next);
+        m.setNote(note);
+        m.setCreatedBy(createdBy);
+        inventoryMovementRepository.save(m);
     }
 
     private Inventory newInventoryRow(Long storeId, Long branchId, Long productId, Long variantId) {

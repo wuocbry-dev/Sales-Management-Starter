@@ -1,0 +1,760 @@
+{
+  "info": {
+    "_postman_id": "2c3c8e4d-5a65-4ef7-a4d6-8fa7c4d6f3e2",
+    "name": "Sales Management - MVP Backend APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0) Auth",
+      "item": [
+        {
+          "name": "POST /api/auth/register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Postman Demo\",\n  \"username\": \"postman_demo\",\n  \"password\": \"123456\",\n  \"storeName\": \"Demo Store\",\n  \"businessType\": \"RETAIL\"\n}\n"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"postman_demo\",\n  \"password\": \"123456\"\n}\n"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/auth/me",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1) User / Role / Permission",
+      "item": [
+        {
+          "name": "GET /api/users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/users/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api", "users", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/users",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"User 01\",\n  \"username\": \"user01\",\n  \"password\": \"123456\",\n  \"email\": \"user01@example.com\",\n  \"phone\": \"0900000001\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/users/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"User 01 (updated)\",\n  \"email\": \"user01.updated@example.com\",\n  \"phone\": \"0900000001\",\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api", "users", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/users/{id}/roles",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"roleCodes\": [\"STORE_MANAGER\"]\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/users/1/roles", "host": ["{{baseUrl}}"], "path": ["api", "users", "1", "roles"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/users/me/password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"123456\",\n  \"newPassword\": \"1234567\"\n}\n"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "me", "password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/users/{id}/reset-password (admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"Temp@123456\"\n}\n"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/1/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "1", "reset-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/roles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/roles", "host": ["{{baseUrl}}"], "path": ["api", "roles"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/roles",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Cashier\",\n  \"code\": \"CASHIER\",\n  \"description\": \"POS cashier\",\n  \"permissionCodes\": [\"PRODUCT_READ\", \"SALES_ORDER_CREATE\"]\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/roles", "host": ["{{baseUrl}}"], "path": ["api", "roles"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/permissions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/permissions", "host": ["{{baseUrl}}"], "path": ["api", "permissions"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2) Store / Branch / Employee",
+      "item": [
+        {
+          "name": "GET /api/stores/current",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/stores/current", "host": ["{{baseUrl}}"], "path": ["api", "stores", "current"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/stores/current",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Demo Store (updated)\",\n  \"businessType\": \"RETAIL\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/stores/current", "host": ["{{baseUrl}}"], "path": ["api", "stores", "current"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/branches",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/branches", "host": ["{{baseUrl}}"], "path": ["api", "branches"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/branches/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/branches/1", "host": ["{{baseUrl}}"], "path": ["api", "branches", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/branches",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Branch 01\",\n  \"code\": \"BR001\",\n  \"phone\": \"0900000002\",\n  \"email\": \"br001@example.com\",\n  \"address\": \"HCM\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/branches", "host": ["{{baseUrl}}"], "path": ["api", "branches"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/branches/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Branch 01 (updated)\",\n  \"code\": \"BR001\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/branches/1", "host": ["{{baseUrl}}"], "path": ["api", "branches", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/employees",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/employees", "host": ["{{baseUrl}}"], "path": ["api", "employees"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/employees/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/employees/1", "host": ["{{baseUrl}}"], "path": ["api", "employees", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/employees",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"branchId\": 1,\n  \"userId\": 1,\n  \"employeeCode\": \"E001\",\n  \"fullName\": \"Employee 01\",\n  \"phone\": \"0900000003\",\n  \"email\": \"emp01@example.com\",\n  \"positionName\": \"Cashier\",\n  \"hireDate\": \"2026-01-01\",\n  \"salary\": 0,\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/employees", "host": ["{{baseUrl}}"], "path": ["api", "employees"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/employees/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"branchId\": 1,\n  \"userId\": 1,\n  \"employeeCode\": \"E001\",\n  \"fullName\": \"Employee 01 (updated)\",\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/employees/1", "host": ["{{baseUrl}}"], "path": ["api", "employees", "1"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3) Category / Product / Variant",
+      "item": [
+        {
+          "name": "GET /api/categories",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/categories", "host": ["{{baseUrl}}"], "path": ["api", "categories"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/categories",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Beverages\",\n  \"parentId\": null,\n  \"description\": \"Drinks\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/categories", "host": ["{{baseUrl}}"], "path": ["api", "categories"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/categories/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Beverages (updated)\",\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/categories/1", "host": ["{{baseUrl}}"], "path": ["api", "categories", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/products",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/products?keyword=&categoryId=&status=", "host": ["{{baseUrl}}"], "path": ["api", "products"], "query": [
+              { "key": "keyword", "value": "" },
+              { "key": "categoryId", "value": "" },
+              { "key": "status", "value": "" }
+            ] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/products/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/products",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"sku\": \"P0001\",\n  \"name\": \"Product 01\",\n  \"categoryId\": 1,\n  \"supplierId\": null,\n  \"sellingPrice\": 25000,\n  \"trackInventory\": true,\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/products/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"sku\": \"P0001\",\n  \"name\": \"Product 01 (updated)\",\n  \"categoryId\": 1,\n  \"supplierId\": null,\n  \"sellingPrice\": 26000,\n  \"trackInventory\": true,\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/products/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/products/{id}/variants",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/products/1/variants", "host": ["{{baseUrl}}"], "path": ["api", "products", "1", "variants"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/products/{id}/variants",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"sku\": \"P0001-V1\",\n  \"barcode\": null,\n  \"variantName\": \"Size M\",\n  \"option1Name\": \"Size\",\n  \"option1Value\": \"M\",\n  \"option2Name\": null,\n  \"option2Value\": null,\n  \"costPrice\": 10000,\n  \"sellingPrice\": 26000\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/products/1/variants", "host": ["{{baseUrl}}"], "path": ["api", "products", "1", "variants"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/product-variants/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"sku\": \"P0001-V1\",\n  \"barcode\": null,\n  \"variantName\": \"Size M (updated)\",\n  \"option1Name\": \"Size\",\n  \"option1Value\": \"M\",\n  \"option2Name\": null,\n  \"option2Value\": null,\n  \"costPrice\": 10000,\n  \"sellingPrice\": 26000,\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/product-variants/1", "host": ["{{baseUrl}}"], "path": ["api", "product-variants", "1"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4) Supplier / Purchase / Inventory",
+      "item": [
+        {
+          "name": "GET /api/suppliers",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/suppliers", "host": ["{{baseUrl}}"], "path": ["api", "suppliers"] } },
+          "response": []
+        },
+        {
+          "name": "GET /api/suppliers/{id}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/suppliers/1", "host": ["{{baseUrl}}"], "path": ["api", "suppliers", "1"] } },
+          "response": []
+        },
+        {
+          "name": "POST /api/suppliers",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"NCC Demo\",\n  \"contactName\": \"Anh A\",\n  \"phone\": \"0900000009\",\n  \"email\": \"ncc@example.com\",\n  \"address\": \"HCM\",\n  \"taxCode\": \"TAX-001\",\n  \"notes\": \"Supplier test\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/suppliers", "host": ["{{baseUrl}}"], "path": ["api", "suppliers"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/suppliers/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"NCC Demo (updated)\",\n  \"contactName\": \"Anh A\",\n  \"phone\": \"0900000009\",\n  \"email\": \"ncc@example.com\",\n  \"address\": \"HCM\",\n  \"taxCode\": \"TAX-001\",\n  \"notes\": \"Supplier test\",\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/suppliers/1", "host": ["{{baseUrl}}"], "path": ["api", "suppliers", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/purchase-orders",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"supplierId\": 1,\n  \"branchId\": 1,\n  \"orderDate\": null,\n  \"expectedDate\": null,\n  \"notes\": \"Nhap hang demo\",\n  \"items\": [\n    { \"productId\": 1, \"variantId\": null, \"quantity\": 10, \"costPrice\": 10000 }\n  ],\n  \"receiveNow\": true\n}\n"
+            },
+            "url": { "raw": "{{baseUrl}}/api/purchase-orders", "host": ["{{baseUrl}}"], "path": ["api", "purchase-orders"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/purchase-orders",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/purchase-orders", "host": ["{{baseUrl}}"], "path": ["api", "purchase-orders"] } },
+          "response": []
+        },
+        {
+          "name": "GET /api/purchase-orders/{id}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/purchase-orders/1", "host": ["{{baseUrl}}"], "path": ["api", "purchase-orders", "1"] } },
+          "response": []
+        },
+        {
+          "name": "GET /api/inventories?branchId={branchId}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventories?branchId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventories"],
+              "query": [{ "key": "branchId", "value": "1" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/inventories/{id}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/inventories/1", "host": ["{{baseUrl}}"], "path": ["api", "inventories", "1"] } },
+          "response": []
+        },
+        {
+          "name": "POST /api/inventories/adjust",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"branchId\": 1,\n  \"productId\": 1,\n  \"variantId\": null,\n  \"deltaQuantity\": 2,\n  \"reason\": \"Kiem ke tang\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/inventories/adjust", "host": ["{{baseUrl}}"], "path": ["api", "inventories", "adjust"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5) Customer",
+      "item": [
+        {
+          "name": "GET /api/customers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/customers?query=", "host": ["{{baseUrl}}"], "path": ["api", "customers"], "query": [{ "key": "query", "value": "" }] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/customers/{id}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/customers/1", "host": ["{{baseUrl}}"], "path": ["api", "customers", "1"] } },
+          "response": []
+        },
+        {
+          "name": "POST /api/customers",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerCode\": \"CUST0001\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0901234567\",\n  \"email\": \"a@example.com\",\n  \"gender\": \"MALE\",\n  \"dateOfBirth\": \"1995-01-01\",\n  \"address\": \"HCM\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/customers", "host": ["{{baseUrl}}"], "path": ["api", "customers"] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/customers/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Nguyen Van A (updated)\",\n  \"phone\": \"0901234567\",\n  \"email\": \"a2@example.com\",\n  \"gender\": \"MALE\",\n  \"dateOfBirth\": \"1995-01-01\",\n  \"address\": \"HCM\",\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/customers/1", "host": ["{{baseUrl}}"], "path": ["api", "customers", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/customers/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/customers/1", "host": ["{{baseUrl}}"], "path": ["api", "customers", "1"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6) Sales Order / POS",
+      "item": [
+        {
+          "name": "POST /api/sales-orders",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branchId\": 1,\n  \"customerId\": 1,\n  \"notes\": \"Ban tai quay\",\n  \"items\": [\n    { \"productId\": 1, \"variantId\": null, \"quantity\": 1 }\n  ]\n}\n"
+            },
+            "url": { "raw": "{{baseUrl}}/api/sales-orders", "host": ["{{baseUrl}}"], "path": ["api", "sales-orders"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/sales-orders",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/sales-orders", "host": ["{{baseUrl}}"], "path": ["api", "sales-orders"] } },
+          "response": []
+        },
+        {
+          "name": "GET /api/sales-orders/{id}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/sales-orders/1", "host": ["{{baseUrl}}"], "path": ["api", "sales-orders", "1"] } },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7) Payment / Cashbook",
+      "item": [
+        {
+          "name": "POST /api/payments",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"salesOrderId\": 1,\n  \"paymentMethod\": \"CASH\",\n  \"amount\": 10000,\n  \"paidAt\": null,\n  \"transactionRef\": null,\n  \"notes\": \"Thu tien\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/payments", "host": ["{{baseUrl}}"], "path": ["api", "payments"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/payments/{id}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/payments/1", "host": ["{{baseUrl}}"], "path": ["api", "payments", "1"] } },
+          "response": []
+        },
+        {
+          "name": "GET /api/payments/order/{salesOrderId}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/payments/order/1", "host": ["{{baseUrl}}"], "path": ["api", "payments", "order", "1"] } },
+          "response": []
+        },
+        {
+          "name": "GET /api/cashbook",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/cashbook", "host": ["{{baseUrl}}"], "path": ["api", "cashbook"] } },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8) Dashboard / Report",
+      "item": [
+        {
+          "name": "GET /api/dashboard/summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/dashboard/summary?branchId=", "host": ["{{baseUrl}}"], "path": ["api", "dashboard", "summary"], "query": [{ "key": "branchId", "value": "" }] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/reports/sales-summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/sales-summary?branchId=&fromDate=&toDate=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "sales-summary"],
+              "query": [
+                { "key": "branchId", "value": "" },
+                { "key": "fromDate", "value": "" },
+                { "key": "toDate", "value": "" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/reports/inventory-summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/inventory-summary?branchId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "inventory-summary"],
+              "query": [{ "key": "branchId", "value": "1" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9) Shipment",
+      "item": [
+        {
+          "name": "POST /api/shipments",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"salesOrderId\": 1,\n  \"carrierName\": \"GHTK\",\n  \"serviceName\": \"FAST\",\n  \"trackingNumber\": \"TRK-0001\",\n  \"receiverName\": \"Nguyen Van A\",\n  \"receiverPhone\": \"0901234567\",\n  \"receiverAddress\": \"123 ABC, HCM\",\n  \"shippingFee\": 20000,\n  \"codAmount\": 0\n}\n"
+            },
+            "url": { "raw": "{{baseUrl}}/api/shipments", "host": ["{{baseUrl}}"], "path": ["api", "shipments"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/shipments/{id}",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/shipments/1", "host": ["{{baseUrl}}"], "path": ["api", "shipments", "1"] } },
+          "response": []
+        },
+        {
+          "name": "PUT /api/shipments/{id}/status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"SHIPPING\",\n  \"shippedAt\": null,\n  \"deliveredAt\": null\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/shipments/1/status", "host": ["{{baseUrl}}"], "path": ["api", "shipments", "1", "status"] }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+

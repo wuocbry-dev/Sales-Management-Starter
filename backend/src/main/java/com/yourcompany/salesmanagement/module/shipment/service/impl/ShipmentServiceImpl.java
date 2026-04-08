@@ -23,7 +23,10 @@ import java.util.UUID;
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
 
-    private static final String STATUS_READY_TO_SHIP = "READY_TO_SHIP";
+    private static final String STATUS_PENDING = "PENDING";
+    private static final String STATUS_SHIPPING = "SHIPPING";
+    private static final String STATUS_DELIVERED = "DELIVERED";
+    private static final String STATUS_FAILED = "FAILED";
 
     private final ShipmentRepository shipmentRepository;
     private final SalesOrderRepository salesOrderRepository;
@@ -52,7 +55,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         s.setCarrierName(request.carrierName());
         s.setServiceName(request.serviceName());
         s.setTrackingNumber(request.trackingNumber());
-        s.setStatus(STATUS_READY_TO_SHIP);
+        s.setStatus(STATUS_PENDING);
         s.setReceiverName(request.receiverName());
         s.setReceiverPhone(request.receiverPhone());
         s.setReceiverAddress(request.receiverAddress());
@@ -81,19 +84,38 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    public ShipmentResponse getById(Long id) {
+        Long storeId = SecurityUtils.requireStoreId();
+        Shipment s = shipmentRepository.findByIdAndStoreId(id, storeId)
+                .orElseThrow(() -> new BusinessException("Shipment not found", HttpStatus.NOT_FOUND));
+        return toResponse(s);
+    }
+
+    @Override
     public ShipmentResponse updateStatus(Long shipmentId, UpdateShipmentStatusRequest request) {
         Long storeId = SecurityUtils.requireStoreId();
         Shipment s = shipmentRepository.findByIdAndStoreId(shipmentId, storeId)
                 .orElseThrow(() -> new BusinessException("Shipment not found", HttpStatus.NOT_FOUND));
 
-        s.setStatus(request.status().trim());
+        String nextStatus = request.status().trim().toUpperCase();
+        if (!STATUS_PENDING.equals(nextStatus)
+                && !STATUS_SHIPPING.equals(nextStatus)
+                && !STATUS_DELIVERED.equals(nextStatus)
+                && !STATUS_FAILED.equals(nextStatus)) {
+            throw new BusinessException("Unsupported shipment status. Allowed: PENDING, SHIPPING, DELIVERED, FAILED",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        s.setStatus(nextStatus);
+
         if (request.shippedAt() != null) s.setShippedAt(request.shippedAt());
         if (request.deliveredAt() != null) s.setDeliveredAt(request.deliveredAt());
-        // basic auto timestamps for common statuses
-        if ("SHIPPED".equalsIgnoreCase(s.getStatus()) && s.getShippedAt() == null) {
+
+        // auto timestamps for common statuses
+        if (STATUS_SHIPPING.equals(nextStatus) && s.getShippedAt() == null) {
             s.setShippedAt(LocalDateTime.now());
         }
-        if ("DELIVERED".equalsIgnoreCase(s.getStatus()) && s.getDeliveredAt() == null) {
+        if (STATUS_DELIVERED.equals(nextStatus) && s.getDeliveredAt() == null) {
             s.setDeliveredAt(LocalDateTime.now());
         }
 

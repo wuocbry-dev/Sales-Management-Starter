@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/payments")
+@RequestMapping({"/api/v1/payments", "/api/payments"})
 public class PaymentController {
     private final PaymentService paymentService;
 
@@ -24,8 +24,13 @@ public class PaymentController {
         return BaseResponse.ok("Payment created successfully", paymentService.createPayment(request));
     }
 
-    @GetMapping
-    public BaseResponse<List<PaymentResponse>> listBySalesOrder(@RequestParam Long salesOrderId) {
+    @GetMapping("/{id}")
+    public BaseResponse<PaymentResponse> getById(@PathVariable Long id) {
+        return BaseResponse.ok("Payment fetched successfully", paymentService.getById(id));
+    }
+
+    @GetMapping("/order/{salesOrderId}")
+    public BaseResponse<List<PaymentResponse>> listBySalesOrder(@PathVariable Long salesOrderId) {
         return BaseResponse.ok("Payments fetched successfully", paymentService.getPaymentsBySalesOrderId(salesOrderId));
     }
 

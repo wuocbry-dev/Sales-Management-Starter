@@ -4,12 +4,14 @@ import com.yourcompany.salesmanagement.common.security.SecurityUtils;
 import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.product.repository.ProductRepository;
 import com.yourcompany.salesmanagement.module.variant.dto.request.CreateVariantRequest;
+import com.yourcompany.salesmanagement.module.variant.dto.request.UpdateVariantRequest;
 import com.yourcompany.salesmanagement.module.variant.dto.response.VariantResponse;
 import com.yourcompany.salesmanagement.module.variant.entity.ProductVariant;
 import com.yourcompany.salesmanagement.module.variant.repository.ProductVariantRepository;
 import com.yourcompany.salesmanagement.module.variant.service.VariantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -57,6 +59,39 @@ public class VariantServiceImpl implements VariantService {
         v.setCostPrice(BigDecimal.valueOf(request.costPrice()));
         v.setSellingPrice(BigDecimal.valueOf(request.sellingPrice()));
         v.setStatus("ACTIVE");
+        v = productVariantRepository.save(v);
+        return toResponse(v);
+    }
+
+    @Override
+    @Transactional
+    public VariantResponse updateVariant(Long variantId, UpdateVariantRequest request) {
+        Long storeId = SecurityUtils.requireStoreId();
+
+        ProductVariant v = productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new BusinessException("Variant not found", HttpStatus.NOT_FOUND));
+
+        productRepository.findByIdAndStoreId(v.getProductId(), storeId)
+                .orElseThrow(() -> new BusinessException("Product not found", HttpStatus.NOT_FOUND));
+
+        String newSku = request.sku().trim();
+        if (!newSku.equalsIgnoreCase(v.getSku()) && productVariantRepository.existsByProductIdAndSku(v.getProductId(), newSku)) {
+            throw new BusinessException("Variant SKU already exists", HttpStatus.CONFLICT);
+        }
+
+        v.setSku(newSku);
+        v.setBarcode(request.barcode());
+        v.setVariantName(request.variantName());
+        v.setOption1Name(request.option1Name());
+        v.setOption1Value(request.option1Value());
+        v.setOption2Name(request.option2Name());
+        v.setOption2Value(request.option2Value());
+        v.setCostPrice(BigDecimal.valueOf(request.costPrice()));
+        v.setSellingPrice(BigDecimal.valueOf(request.sellingPrice()));
+        if (request.status() != null && !request.status().isBlank()) {
+            v.setStatus(request.status().trim());
+        }
+
         v = productVariantRepository.save(v);
         return toResponse(v);
     }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/shipments")
+@RequestMapping({"/api/v1/shipments", "/api/shipments"})
 public class ShipmentController {
     private final ShipmentService shipmentService;
 
@@ -22,6 +22,11 @@ public class ShipmentController {
     @PostMapping
     public BaseResponse<ShipmentResponse> create(@Valid @RequestBody CreateShipmentRequest request) {
         return BaseResponse.ok("Shipment created successfully", shipmentService.create(request));
+    }
+
+    @GetMapping("/{id}")
+    public BaseResponse<ShipmentResponse> getById(@PathVariable Long id) {
+        return BaseResponse.ok("Shipment fetched successfully", shipmentService.getById(id));
     }
 
     @GetMapping
@@ -37,7 +42,7 @@ public class ShipmentController {
         return BaseResponse.fail("branchId or salesOrderId is required", List.of());
     }
 
-    @PatchMapping("/{id}/status")
+    @PutMapping("/{id}/status")
     public BaseResponse<ShipmentResponse> updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateShipmentStatusRequest request) {
         return BaseResponse.ok("Shipment status updated successfully", shipmentService.updateStatus(id, request));
     }
