@@ -9,6 +9,8 @@ import java.util.List;
 public interface ShipmentService {
     ShipmentResponse create(CreateShipmentRequest request);
 
+    ShipmentResponse getById(Long id);
+
     List<ShipmentResponse> listByBranch(Long branchId);
 
     List<ShipmentResponse> listBySalesOrder(Long salesOrderId);

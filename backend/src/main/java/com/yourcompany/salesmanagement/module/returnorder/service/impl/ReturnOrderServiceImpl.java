@@ -1,6 +1,7 @@
 package com.yourcompany.salesmanagement.module.returnorder.service.impl;
 
 import com.yourcompany.salesmanagement.common.security.SecurityUtils;
+import com.yourcompany.salesmanagement.common.audit.AuditLoggable;
 import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.auth.service.dto.UserPrincipal;
 import com.yourcompany.salesmanagement.module.cashbook.entity.CashbookEntry;
@@ -59,6 +60,7 @@ public class ReturnOrderServiceImpl implements ReturnOrderService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "returnorder", action = "CREATE", entityType = "ReturnOrder")
     public ReturnOrderResponse create(CreateReturnOrderRequest request) {
         Long storeId = SecurityUtils.requireStoreId();
         UserPrincipal principal = SecurityUtils.requirePrincipal();

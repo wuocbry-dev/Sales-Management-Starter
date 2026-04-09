@@ -4,6 +4,7 @@ public record BranchResponse(
         Long id,
         String name,
         String code,
-        boolean isDefault
+        boolean isDefault,
+        String status
 ) {}
 

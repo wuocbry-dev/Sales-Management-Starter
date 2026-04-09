@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.Objects;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -72,8 +73,17 @@ public class AuthServiceImpl implements AuthService {
                 .distinct()
                 .toList();
 
+        List<String> permissionCodes = user.getRoles().stream()
+                .flatMap(r -> r.getPermissions().stream())
+                .map(p -> p.getCode())
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .distinct()
+                .toList();
+
         var ctx = authContextService.resolveForUserId(user.getId());
-        String accessToken = jwtService.generateAccessToken(user.getId(), user.getUsername(), roleCodes, ctx.storeId(), ctx.branchId());
+        String accessToken = jwtService.generateAccessToken(user.getId(), user.getUsername(), roleCodes, permissionCodes, ctx.storeId(), ctx.branchId());
         String primaryRole = roleCodes.isEmpty() ? null : roleCodes.get(0);
 
         return new LoginResponse(
@@ -118,8 +128,16 @@ public class AuthServiceImpl implements AuthService {
         branchRepository.save(branch);
 
         List<String> roleCodes = user.getRoles().stream().map(r -> r.getCode()).distinct().toList();
+        List<String> permissionCodes = user.getRoles().stream()
+                .flatMap(r -> r.getPermissions().stream())
+                .map(p -> p.getCode())
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .distinct()
+                .toList();
         var ctx = authContextService.resolveForUserId(user.getId());
-        String accessToken = jwtService.generateAccessToken(user.getId(), user.getUsername(), roleCodes, ctx.storeId(), ctx.branchId());
+        String accessToken = jwtService.generateAccessToken(user.getId(), user.getUsername(), roleCodes, permissionCodes, ctx.storeId(), ctx.branchId());
         String primaryRole = roleCodes.isEmpty() ? null : roleCodes.get(0);
 
         return new LoginResponse(accessToken, "Bearer", user.getUsername(), primaryRole, user.getFullName());

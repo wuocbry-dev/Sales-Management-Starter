@@ -6,6 +6,7 @@ import com.yourcompany.salesmanagement.module.dashboard.dto.response.SalesDailyS
 import com.yourcompany.salesmanagement.module.dashboard.service.DashboardService;
 import com.yourcompany.salesmanagement.module.dashboard.service.DashboardReportService;
 import com.yourcompany.salesmanagement.module.inventory.dto.response.InventoryOverviewResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/dashboard")
+@RequestMapping({"/api/v1/dashboard", "/api/dashboard"})
 public class DashboardController {
 
     private final DashboardService dashboardService;
@@ -27,11 +28,13 @@ public class DashboardController {
     }
 
     @GetMapping("/summary")
-    public BaseResponse<DashboardSummaryResponse> getSummary() {
-        return BaseResponse.ok("Dashboard summary fetched successfully", dashboardService.getSummary());
+    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    public BaseResponse<DashboardSummaryResponse> getSummary(@RequestParam(required = false) Long branchId) {
+        return BaseResponse.ok("Dashboard summary fetched successfully", dashboardService.getSummary(branchId));
     }
 
     @GetMapping("/sales-daily-summary")
+    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<SalesDailySummaryResponse>> salesDailySummary(
             @RequestParam(required = false) Long branchId,
             @RequestParam(required = false) LocalDate fromDate,
@@ -42,6 +45,7 @@ public class DashboardController {
     }
 
     @GetMapping("/inventory-warnings")
+    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<InventoryOverviewResponse>> inventoryWarnings(@RequestParam Long branchId) {
         return BaseResponse.ok("Inventory warnings fetched successfully",
                 dashboardReportService.getInventoryWarnings(branchId));

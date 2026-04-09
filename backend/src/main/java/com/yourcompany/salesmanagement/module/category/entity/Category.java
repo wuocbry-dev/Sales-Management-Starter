@@ -18,5 +18,8 @@ public class Category {
 
     @Column(nullable = false, length = 150)
     private String name;
+
+    @Column(nullable = false, length = 20)
+    private String status;
 }
 

@@ -1,24 +1,25 @@
 package com.yourcompany.salesmanagement.module.product.dto.request;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
 
 public record CreateProductRequest(
-        @NotBlank(message = "Code is required")
-        String code,
+        @NotBlank(message = "SKU is required")
+        String sku,
 
         @NotBlank(message = "Name is required")
         String name,
 
-        @NotBlank(message = "Category is required")
-        String category,
+        Long categoryId,
 
-        @NotNull(message = "Price is required")
-        @Min(value = 0, message = "Price must be >= 0")
-        Double price,
+        Long supplierId,
 
-        @NotNull(message = "Stock is required")
-        @Min(value = 0, message = "Stock must be >= 0")
-        Integer stock
+        @NotNull(message = "Selling price is required")
+        @Min(value = 0, message = "Selling price must be >= 0")
+        Double sellingPrice,
+
+        Boolean trackInventory,
+
+        String status
 ) {}

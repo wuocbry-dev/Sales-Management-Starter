@@ -24,5 +24,14 @@ public class Branch {
 
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault;
+
+    /**
+     * Branch operational status.
+     * Values: ACTIVE, INACTIVE
+     *
+     * Note: database migration required to add column {@code status}.
+     */
+    @Column(nullable = false, length = 20)
+    private String status;
 }
 

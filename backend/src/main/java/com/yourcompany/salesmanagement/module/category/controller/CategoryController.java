@@ -2,6 +2,7 @@ package com.yourcompany.salesmanagement.module.category.controller;
 
 import com.yourcompany.salesmanagement.common.base.BaseResponse;
 import com.yourcompany.salesmanagement.module.category.dto.request.CreateCategoryRequest;
+import com.yourcompany.salesmanagement.module.category.dto.request.UpdateCategoryRequest;
 import com.yourcompany.salesmanagement.module.category.dto.response.CategoryResponse;
 import com.yourcompany.salesmanagement.module.category.service.CategoryService;
 import jakarta.validation.Valid;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping({"/api/v1/categories", "/api/categories"})
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -26,6 +27,11 @@ public class CategoryController {
     @PostMapping
     public BaseResponse<CategoryResponse> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
         return BaseResponse.ok("Category created successfully", categoryService.createCategory(request));
+    }
+
+    @PutMapping("/{id}")
+    public BaseResponse<CategoryResponse> update(@PathVariable Long id, @Valid @RequestBody UpdateCategoryRequest request) {
+        return BaseResponse.ok("Category updated successfully", categoryService.update(id, request));
     }
 }
 

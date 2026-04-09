@@ -28,13 +28,30 @@ public class JwtService {
                                       List<String> roleCodes,
                                       Long storeId,
                                       Long branchId) {
+        return generateAccessToken(userId, username, roleCodes, null, storeId, branchId);
+    }
+
+    public String generateAccessToken(Long userId,
+                                      String username,
+                                      List<String> roleCodes,
+                                      List<String> permissionCodes,
+                                      Long storeId,
+                                      Long branchId) {
         Instant now = Instant.now();
         Instant exp = now.plusSeconds(jwtProperties.accessTokenTtlSeconds());
 
-        Map<String, Object> claims = Map.of(
+        // Keep claims backward compatible: permissionCodes may be absent for older clients/tokens.
+        Map<String, Object> claims = permissionCodes == null ? Map.of(
                 "userId", userId,
                 "username", username,
                 "roleCodes", roleCodes,
+                "storeId", storeId,
+                "branchId", branchId
+        ) : Map.of(
+                "userId", userId,
+                "username", username,
+                "roleCodes", roleCodes,
+                "permissionCodes", permissionCodes,
                 "storeId", storeId,
                 "branchId", branchId
         );

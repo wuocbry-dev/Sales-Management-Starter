@@ -46,6 +46,7 @@ public class AuthController {
                 principal.username(),
                 fullName,
                 principal.roleCodes(),
+                principal.permissionCodes(),
                 principal.storeId(),
                 principal.branchId()
         ));

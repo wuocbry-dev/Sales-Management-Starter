@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Lock;
 import jakarta.persistence.LockModeType;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
@@ -28,5 +29,9 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Inventory> findByStoreIdAndBranchIdAndProductIdAndVariantId(Long storeId, Long branchId, Long productId, Long variantId);
+
+    List<Inventory> findAllByStoreIdAndBranchIdOrderByIdDesc(Long storeId, Long branchId);
+
+    Optional<Inventory> findByIdAndStoreId(Long id, Long storeId);
 }
 

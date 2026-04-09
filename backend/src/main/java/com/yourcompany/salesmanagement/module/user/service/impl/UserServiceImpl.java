@@ -1,8 +1,14 @@
 package com.yourcompany.salesmanagement.module.user.service.impl;
 
 import com.yourcompany.salesmanagement.exception.BusinessException;
+import com.yourcompany.salesmanagement.common.audit.AuditLoggable;
+import com.yourcompany.salesmanagement.common.security.SecurityUtils;
+import com.yourcompany.salesmanagement.module.auth.service.dto.UserPrincipal;
 import com.yourcompany.salesmanagement.module.user.dto.request.AssignRolesRequest;
+import com.yourcompany.salesmanagement.module.user.dto.request.ChangeMyPasswordRequest;
 import com.yourcompany.salesmanagement.module.user.dto.request.CreateUserRequest;
+import com.yourcompany.salesmanagement.module.user.dto.request.ResetPasswordRequest;
+import com.yourcompany.salesmanagement.module.user.dto.request.UpdateUserRequest;
 import com.yourcompany.salesmanagement.module.user.dto.response.UserDetailResponse;
 import com.yourcompany.salesmanagement.module.user.dto.response.UserResponse;
 import com.yourcompany.salesmanagement.module.user.entity.Role;
@@ -17,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "user", action = "CREATE", entityType = "User")
     public UserDetailResponse createUser(CreateUserRequest request) {
         if (userRepository.findByUsername(request.username()).isPresent()) {
             throw new BusinessException("Username already exists", HttpStatus.CONFLICT);
@@ -71,6 +79,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "user", action = "UPDATE", entityType = "User")
+    public UserDetailResponse updateUser(Long id, UpdateUserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("User not found", HttpStatus.NOT_FOUND));
+
+        user.setFullName(request.fullName());
+        user.setEmail(blankToNull(request.email()));
+        user.setPhone(blankToNull(request.phone()));
+        if (request.status() != null && !request.status().isBlank()) {
+            user.setStatus(request.status().trim());
+        }
+        user = userRepository.save(user);
+        return toUserDetailResponse(user);
+    }
+
+    @Override
+    @Transactional
+    @AuditLoggable(module = "user", action = "ASSIGN_ROLES", entityType = "User")
     public UserDetailResponse assignRoles(Long userId, AssignRolesRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException("User not found", HttpStatus.NOT_FOUND));
@@ -80,6 +106,48 @@ public class UserServiceImpl implements UserService {
         user.getRoles().addAll(roles);
         user = userRepository.save(user);
         return toUserDetailResponse(user);
+    }
+
+    @Override
+    @Transactional
+    public void changeMyPassword(ChangeMyPasswordRequest request) {
+        UserPrincipal principal = SecurityUtils.requirePrincipal();
+        User user = userRepository.findById(principal.userId())
+                .orElseThrow(() -> new BusinessException("User not found", HttpStatus.NOT_FOUND));
+
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
+            throw new BusinessException("Current password is incorrect", HttpStatus.BAD_REQUEST);
+        }
+        if (passwordEncoder.matches(request.newPassword(), user.getPasswordHash())) {
+            throw new BusinessException("New password must be different from current password", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    @AuditLoggable(module = "user", action = "RESET_PASSWORD", entityType = "User")
+    public void adminResetPassword(Long userId, ResetPasswordRequest request) {
+        UserPrincipal principal = SecurityUtils.requirePrincipal();
+        if (!isAdminLike(principal)) {
+            throw new BusinessException("Forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException("User not found", HttpStatus.NOT_FOUND));
+
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+    }
+
+    private boolean isAdminLike(UserPrincipal principal) {
+        if (principal == null || principal.roleCodes() == null) return false;
+        return principal.roleCodes().stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .anyMatch(code -> code.equalsIgnoreCase("STORE_MANAGER") || code.equalsIgnoreCase("ADMIN") || code.equalsIgnoreCase("SUPER_ADMIN"));
     }
 
     private Set<Role> loadRolesByCodes(List<String> roleCodes) {
