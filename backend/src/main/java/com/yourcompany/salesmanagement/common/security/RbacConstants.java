@@ -48,5 +48,9 @@ public final class RbacConstants {
     public static final String PERM_INTEGRATION_WRITE = "INTEGRATION_WRITE";
     public static final String PERM_INTEGRATION_SYNC_ORDERS = "INTEGRATION_SYNC_ORDERS";
     public static final String PERM_ONLINE_ORDER_READ = "ONLINE_ORDER_READ";
+
+    public static final String PERM_SHIFT_READ = "SHIFT_READ";
+    public static final String PERM_SHIFT_OPEN = "SHIFT_OPEN";
+    public static final String PERM_SHIFT_CLOSE = "SHIFT_CLOSE";
 }
 

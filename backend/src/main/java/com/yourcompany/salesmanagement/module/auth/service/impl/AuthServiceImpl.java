@@ -125,6 +125,7 @@ public class AuthServiceImpl implements AuthService {
         branch.setName("Chi nhanh mac dinh");
         branch.setCode("BRANCH_DEFAULT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase(Locale.ROOT));
         branch.setIsDefault(true);
+        branch.setStatus("ACTIVE");
         branchRepository.save(branch);
 
         List<String> roleCodes = user.getRoles().stream().map(r -> r.getCode()).distinct().toList();

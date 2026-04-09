@@ -175,6 +175,11 @@ public class RbacSeedRunner implements ApplicationRunner {
         put(m, "SHIPMENT_READ", "Shipment - Read", "shipment", "View shipments");
         put(m, "SHIPMENT_WRITE", "Shipment - Write", "shipment", "Create/update shipments and statuses");
 
+        // Shift (POS cash register)
+        put(m, "SHIFT_READ", "Shift - Read", "shift", "View current/previous shifts");
+        put(m, "SHIFT_OPEN", "Shift - Open", "shift", "Open a shift at a branch");
+        put(m, "SHIFT_CLOSE", "Shift - Close", "shift", "Close a shift at a branch");
+
         return m;
     }
 
@@ -240,6 +245,7 @@ public class RbacSeedRunner implements ApplicationRunner {
                         "INTEGRATION_READ", "INTEGRATION_WRITE", "INTEGRATION_SYNC_ORDERS", "ONLINE_ORDER_READ",
                         "CASHBOOK_READ", "CASHBOOK_WRITE", "DEBT_READ",
                         "DASHBOARD_READ", "REPORT_READ",
+                        "SHIFT_READ", "SHIFT_OPEN", "SHIFT_CLOSE",
                         "IMPORT_JOB_READ"
                         , "EINVOICE_ISSUE", "EINVOICE_READ"
                         , "SHIPMENT_READ", "SHIPMENT_WRITE"
@@ -261,6 +267,7 @@ public class RbacSeedRunner implements ApplicationRunner {
                         "CUSTOMER_READ", "CUSTOMER_WRITE",
                         "LOYALTY_READ", "LOYALTY_REDEEM",
                         "DASHBOARD_READ",
+                        "SHIFT_READ", "SHIFT_OPEN", "SHIFT_CLOSE",
                         "SHIPMENT_READ", "SHIPMENT_WRITE"
                 ))
         ));
@@ -275,6 +282,7 @@ public class RbacSeedRunner implements ApplicationRunner {
                         "PRODUCT_READ", "PRODUCT_IMPORT", "PRODUCT_EXPORT",
                         "INVENTORY_READ", "INVENTORY_ADJUST",
                         "PURCHASE_READ", "PURCHASE_CREATE", "PURCHASE_RECEIVE",
+                        "SHIFT_READ",
                         "ONLINE_ORDER_READ",
                         "REPORT_READ", "DASHBOARD_READ",
                         "SHIPMENT_READ"
@@ -289,6 +297,7 @@ public class RbacSeedRunner implements ApplicationRunner {
                 new LinkedHashSet<>(List.of(
                         "PAYMENT_READ",
                         "CASHBOOK_READ", "CASHBOOK_WRITE", "DEBT_READ",
+                        "SHIFT_READ",
                         "REPORT_READ", "DASHBOARD_READ",
                         "IMPORT_JOB_READ",
                         "PRODUCT_EXPORT",

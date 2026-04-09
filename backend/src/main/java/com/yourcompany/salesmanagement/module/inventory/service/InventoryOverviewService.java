@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface InventoryOverviewService {
     List<InventoryOverviewResponse> getOverviewByBranch(Long branchId);
+    List<InventoryOverviewResponse> getWarningsByBranch(Long branchId);
 }
 

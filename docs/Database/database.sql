@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS integration_channels;
 DROP TABLE IF EXISTS vouchers;
 DROP TABLE IF EXISTS promotions;
 DROP TABLE IF EXISTS cashbook_entries;
+DROP TABLE IF EXISTS shifts;
 DROP TABLE IF EXISTS shipments;
 DROP TABLE IF EXISTS payments;
 DROP TABLE IF EXISTS sales_order_items;
@@ -395,6 +396,24 @@ CREATE TABLE payments (
     CONSTRAINT fk_payments_branch FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE RESTRICT,
     CONSTRAINT fk_payments_order FOREIGN KEY (sales_order_id) REFERENCES sales_orders(id) ON DELETE RESTRICT,
     CONSTRAINT fk_payments_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE shifts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    store_id BIGINT UNSIGNED NOT NULL,
+    branch_id BIGINT UNSIGNED NOT NULL,
+    cashier_user_id BIGINT UNSIGNED NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'OPEN',
+    opening_cash DECIMAL(15,2) NOT NULL DEFAULT 0,
+    closing_cash DECIMAL(15,2) NULL,
+    opened_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    closed_at DATETIME NULL,
+    note VARCHAR(500) NULL,
+    CONSTRAINT fk_shifts_store FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE,
+    CONSTRAINT fk_shifts_branch FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_shifts_cashier FOREIGN KEY (cashier_user_id) REFERENCES users(id) ON DELETE RESTRICT,
+    INDEX idx_shifts_lookup (store_id, branch_id, status, opened_at),
+    INDEX idx_shifts_cashier (store_id, cashier_user_id, opened_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE shipments (

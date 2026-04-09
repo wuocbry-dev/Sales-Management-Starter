@@ -299,6 +299,13 @@ JOIN users u ON u.username = 'cashier01'
 WHERE so.order_number = 'SO-20260407-0001'
 ON DUPLICATE KEY UPDATE amount = VALUES(amount), status = VALUES(status);
 
+INSERT INTO shifts (store_id, branch_id, cashier_user_id, status, opening_cash, closing_cash, opened_at, closed_at, note)
+SELECT s.id, b.id, u.id, 'OPEN', 500000, NULL, NOW(), NULL, 'Ca demo'
+FROM stores s
+JOIN branches b ON b.store_id = s.id AND b.code = 'BRANCH_CT_001'
+JOIN users u ON u.username = 'cashier01'
+WHERE s.code = 'STORE_DEMO_001';
+
 INSERT INTO cashbook_entries (store_id, branch_id, entry_type, category, reference_type, reference_id, amount, description, occurred_at, created_by)
 SELECT so.store_id, so.branch_id, 'INCOME', 'BAN_HANG', 'SALES_ORDER', so.id, 397000, 'Thu tien don hang SO-20260407-0001', NOW(), u.id
 FROM sales_orders so

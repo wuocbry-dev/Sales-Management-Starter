@@ -33,5 +33,11 @@ public class Branch {
      */
     @Column(nullable = false, length = 20)
     private String status;
+
+    @PrePersist
+    public void prePersist() {
+        if (status == null || status.isBlank()) status = "ACTIVE";
+        if (isDefault == null) isDefault = false;
+    }
 }
 
