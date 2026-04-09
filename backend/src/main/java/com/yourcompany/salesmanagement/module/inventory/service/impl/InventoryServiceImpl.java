@@ -1,15 +1,19 @@
 package com.yourcompany.salesmanagement.module.inventory.service.impl;
 
 import com.yourcompany.salesmanagement.common.security.SecurityUtils;
+import com.yourcompany.salesmanagement.common.audit.AuditLoggable;
 import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.branch.repository.BranchRepository;
 import com.yourcompany.salesmanagement.module.inventory.dto.request.InventoryAdjustRequest;
+import com.yourcompany.salesmanagement.module.inventory.dto.request.UpsertInventoryThresholdRequest;
 import com.yourcompany.salesmanagement.module.inventory.dto.response.InventoryResponse;
+import com.yourcompany.salesmanagement.module.inventory.dto.response.InventoryThresholdResponse;
 import com.yourcompany.salesmanagement.module.inventory.entity.Inventory;
 import com.yourcompany.salesmanagement.module.inventory.entity.InventoryMovement;
 import com.yourcompany.salesmanagement.module.inventory.repository.InventoryMovementRepository;
 import com.yourcompany.salesmanagement.module.inventory.repository.InventoryRepository;
 import com.yourcompany.salesmanagement.module.inventory.service.InventoryService;
+import com.yourcompany.salesmanagement.module.product.entity.Product;
 import com.yourcompany.salesmanagement.module.product.repository.ProductRepository;
 import com.yourcompany.salesmanagement.module.variant.repository.ProductVariantRepository;
 import org.springframework.http.HttpStatus;
@@ -61,7 +65,76 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public List<InventoryThresholdResponse> listThresholdsByBranch(Long branchId) {
+        Long storeId = SecurityUtils.requireStoreId();
+        branchRepository.findByIdAndStoreId(branchId, storeId)
+                .orElseThrow(() -> new BusinessException("Branch not found", HttpStatus.NOT_FOUND));
+
+        return inventoryRepository.findAllByStoreIdAndBranchIdOrderByIdDesc(storeId, branchId).stream()
+                .map(this::toThresholdResponse)
+                .toList();
+    }
+
+    @Override
     @Transactional
+    public InventoryThresholdResponse upsertThreshold(UpsertInventoryThresholdRequest request) {
+        Long storeId = SecurityUtils.requireStoreId();
+        Long userId = SecurityUtils.requirePrincipal().userId();
+        Long branchId = request.branchId();
+
+        branchRepository.findByIdAndStoreId(branchId, storeId)
+                .orElseThrow(() -> new BusinessException("Branch not found", HttpStatus.NOT_FOUND));
+
+        Product p = productRepository.findByIdAndStoreId(request.productId(), storeId)
+                .orElseThrow(() -> new BusinessException("Product not found", HttpStatus.NOT_FOUND));
+
+        Long variantId = request.variantId();
+        if (variantId != null) {
+            productVariantRepository.findByIdAndProductId(variantId, p.getId())
+                    .orElseThrow(() -> new BusinessException("Variant not found for this product", HttpStatus.NOT_FOUND));
+        }
+
+        BigDecimal min = request.minQuantity().setScale(2, RoundingMode.HALF_UP);
+        BigDecimal max = request.maxQuantity() == null ? null : request.maxQuantity().setScale(2, RoundingMode.HALF_UP);
+        if (max != null && max.compareTo(min) < 0) {
+            throw new BusinessException("maxQuantity must be >= minQuantity", HttpStatus.BAD_REQUEST);
+        }
+
+        // Ensure inventory row exists to store thresholds
+        Inventory inv;
+        if (variantId == null) {
+            inv = inventoryRepository
+                    .findFirstByStoreIdAndBranchIdAndProductIdAndVariantIdIsNull(storeId, branchId, p.getId())
+                    .orElseGet(() -> newInventoryRow(storeId, branchId, p.getId(), null));
+        } else {
+            inv = inventoryRepository
+                    .findByStoreIdAndBranchIdAndProductIdAndVariantId(storeId, branchId, p.getId(), variantId)
+                    .orElseGet(() -> newInventoryRow(storeId, branchId, p.getId(), variantId));
+        }
+
+        BigDecimal beforeMin = inv.getMinQuantity();
+        BigDecimal beforeMax = inv.getMaxQuantity();
+        inv.setMinQuantity(min);
+        inv.setMaxQuantity(max);
+        inv = inventoryRepository.save(inv);
+
+        // Log movement as a non-quantity event for auditability
+        logMovement(storeId, branchId, p.getId(), variantId,
+                "THRESHOLD", "inventory_threshold", inv.getId(),
+                BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                "Set thresholds min=" + min + ", max=" + (max == null ? "null" : max)
+                        + " (before min=" + (beforeMin == null ? "null" : beforeMin)
+                        + ", max=" + (beforeMax == null ? "null" : beforeMax) + ")",
+                userId);
+
+        return toThresholdResponse(inv);
+    }
+
+    @Override
+    @Transactional
+    @AuditLoggable(module = "inventory", action = "ADJUST", entityType = "Inventory")
     public InventoryResponse adjust(InventoryAdjustRequest request) {
         Long storeId = SecurityUtils.requireStoreId();
         Long userId = SecurityUtils.requirePrincipal().userId();
@@ -159,6 +232,18 @@ public class InventoryServiceImpl implements InventoryService {
                 inv.getVariantId(),
                 inv.getQuantity(),
                 inv.getReservedQuantity(),
+                inv.getMinQuantity(),
+                inv.getMaxQuantity()
+        );
+    }
+
+    private InventoryThresholdResponse toThresholdResponse(Inventory inv) {
+        return new InventoryThresholdResponse(
+                inv.getId(),
+                inv.getStoreId(),
+                inv.getBranchId(),
+                inv.getProductId(),
+                inv.getVariantId(),
                 inv.getMinQuantity(),
                 inv.getMaxQuantity()
         );

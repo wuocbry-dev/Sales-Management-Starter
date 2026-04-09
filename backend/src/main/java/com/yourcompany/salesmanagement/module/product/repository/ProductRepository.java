@@ -15,6 +15,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByStoreIdAndSku(Long storeId, String sku);
 
+    Optional<Product> findFirstByStoreIdAndSku(Long storeId, String sku);
+
     @Query("""
             select p
             from Product p

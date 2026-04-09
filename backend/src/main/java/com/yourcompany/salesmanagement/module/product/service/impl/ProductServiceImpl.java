@@ -1,6 +1,7 @@
 package com.yourcompany.salesmanagement.module.product.service.impl;
 
 import com.yourcompany.salesmanagement.common.security.SecurityUtils;
+import com.yourcompany.salesmanagement.common.audit.AuditLoggable;
 import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.auth.service.dto.UserPrincipal;
 import com.yourcompany.salesmanagement.module.category.repository.CategoryRepository;
@@ -55,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "product", action = "CREATE", entityType = "Product")
     public ProductResponse createProduct(CreateProductRequest request) {
         SecurityUtils.requirePrincipal();
         Long storeId = SecurityUtils.requireStoreId();
@@ -97,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "product", action = "UPDATE", entityType = "Product")
     public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
         SecurityUtils.requirePrincipal();
         Long storeId = SecurityUtils.requireStoreId();
@@ -124,6 +127,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "product", action = "DISABLE", entityType = "Product")
     public void deleteProduct(Long id) {
         SecurityUtils.requirePrincipal();
         Long storeId = SecurityUtils.requireStoreId();

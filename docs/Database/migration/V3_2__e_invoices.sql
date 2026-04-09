@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS e_invoices (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  store_id BIGINT NOT NULL,
+  sales_order_id BIGINT NOT NULL,
+  status VARCHAR(30) NOT NULL,
+  provider_name VARCHAR(50),
+  provider_invoice_id VARCHAR(100),
+  invoice_number VARCHAR(50),
+  buyer_name VARCHAR(200),
+  buyer_tax_code VARCHAR(50),
+  buyer_address VARCHAR(255),
+  buyer_email VARCHAR(150),
+  subtotal DECIMAL(15,2) NOT NULL,
+  tax_amount DECIMAL(15,2) NOT NULL,
+  total_amount DECIMAL(15,2) NOT NULL,
+  issued_at TIMESTAMP NULL,
+  error_message VARCHAR(1000),
+  created_by BIGINT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_e_invoices_store_order (store_id, sales_order_id),
+  INDEX idx_e_invoices_store_status (store_id, status),
+  INDEX idx_e_invoices_store_created (store_id, created_at)
+);
+

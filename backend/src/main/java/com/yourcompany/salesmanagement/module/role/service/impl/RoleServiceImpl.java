@@ -1,6 +1,7 @@
 package com.yourcompany.salesmanagement.module.role.service.impl;
 
 import com.yourcompany.salesmanagement.exception.BusinessException;
+import com.yourcompany.salesmanagement.common.audit.AuditLoggable;
 import com.yourcompany.salesmanagement.module.permission.repository.PermissionRepository;
 import com.yourcompany.salesmanagement.module.role.dto.request.CreateRoleRequest;
 import com.yourcompany.salesmanagement.module.role.dto.response.RoleResponse;
@@ -41,6 +42,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "role", action = "CREATE", entityType = "Role")
     public RoleResponse create(CreateRoleRequest request) {
         String code = request.code().trim();
         if (roleRepository.findByCode(code).isPresent()) {

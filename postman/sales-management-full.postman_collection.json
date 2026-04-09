@@ -1,18 +1,14 @@
 {
   "info": {
-    "_postman_id": "2c3c8e4d-5a65-4ef7-a4d6-8fa7c4d6f3e2",
-    "name": "Sales Management - MVP Backend APIs",
+    "_postman_id": "d7e4a72a-0e7d-4e10-9f2f-3a33b6b19d2f",
+    "name": "Sales Management - Full Backend APIs",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:8080"
-    },
-    {
-      "key": "accessToken",
-      "value": ""
-    }
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "accessToken", "value": "" },
+    { "key": "token", "value": "" },
+    { "key": "channelId", "value": "1" }
   ],
   "item": [
     {
@@ -22,18 +18,12 @@
           "name": "POST /api/auth/register",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json", "type": "text" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Postman Demo\",\n  \"username\": \"postman_demo\",\n  \"password\": \"123456\",\n  \"storeName\": \"Demo Store\",\n  \"businessType\": \"RETAIL\"\n}\n"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
-            }
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
           },
           "response": []
         },
@@ -41,18 +31,9 @@
           "name": "POST /api/auth/login",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json", "type": "text" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"postman_demo\",\n  \"password\": \"123456\"\n}\n"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"postman_demo\",\n  \"password\": \"123456\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
           },
           "response": []
         },
@@ -60,14 +41,8 @@
           "name": "GET /api/auth/me",
           "request": {
             "method": "GET",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "me"]
-            }
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "auth", "me"] }
           },
           "response": []
         }
@@ -141,15 +116,8 @@
               { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
               { "key": "Content-Type", "value": "application/json", "type": "text" }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"currentPassword\": \"123456\",\n  \"newPassword\": \"1234567\"\n}\n"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/users/me/password",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "users", "me", "password"]
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"123456\",\n  \"newPassword\": \"1234567\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/users/me/password", "host": ["{{baseUrl}}"], "path": ["api", "users", "me", "password"] }
           },
           "response": []
         },
@@ -161,15 +129,8 @@
               { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
               { "key": "Content-Type", "value": "application/json", "type": "text" }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"newPassword\": \"Temp@123456\"\n}\n"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/users/1/reset-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "users", "1", "reset-password"]
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"newPassword\": \"Temp@123456\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/users/1/reset-password", "host": ["{{baseUrl}}"], "path": ["api", "users", "1", "reset-password"] }
           },
           "response": []
         },
@@ -364,11 +325,16 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
-            "url": { "raw": "{{baseUrl}}/api/products?keyword=&categoryId=&status=", "host": ["{{baseUrl}}"], "path": ["api", "products"], "query": [
-              { "key": "keyword", "value": "" },
-              { "key": "categoryId", "value": "" },
-              { "key": "status", "value": "" }
-            ] }
+            "url": {
+              "raw": "{{baseUrl}}/api/products?keyword=&categoryId=&status=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"],
+              "query": [
+                { "key": "keyword", "value": "" },
+                { "key": "categoryId", "value": "" },
+                { "key": "status", "value": "" }
+              ]
+            }
           },
           "response": []
         },
@@ -500,10 +466,7 @@
               { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
               { "key": "Content-Type", "value": "application/json", "type": "text" }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"supplierId\": 1,\n  \"branchId\": 1,\n  \"orderDate\": null,\n  \"expectedDate\": null,\n  \"notes\": \"Nhap hang demo\",\n  \"items\": [\n    { \"productId\": 1, \"variantId\": null, \"quantity\": 10, \"costPrice\": 10000 }\n  ],\n  \"receiveNow\": true\n}\n"
-            },
+            "body": { "mode": "raw", "raw": "{\n  \"supplierId\": 1,\n  \"branchId\": 1,\n  \"orderDate\": null,\n  \"expectedDate\": null,\n  \"notes\": \"Nhap hang demo\",\n  \"items\": [\n    { \"productId\": 1, \"variantId\": null, \"quantity\": 10, \"costPrice\": 10000 }\n  ],\n  \"receiveNow\": true\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/purchase-orders", "host": ["{{baseUrl}}"], "path": ["api", "purchase-orders"] }
           },
           "response": []
@@ -523,12 +486,7 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
-            "url": {
-              "raw": "{{baseUrl}}/api/inventories?branchId=1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "inventories"],
-              "query": [{ "key": "branchId", "value": "1" }]
-            }
+            "url": { "raw": "{{baseUrl}}/api/inventories?branchId=1", "host": ["{{baseUrl}}"], "path": ["api", "inventories"], "query": [{ "key": "branchId", "value": "1" }] }
           },
           "response": []
         },
@@ -617,10 +575,7 @@
               { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
               { "key": "Content-Type", "value": "application/json", "type": "text" }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"branchId\": 1,\n  \"customerId\": 1,\n  \"notes\": \"Ban tai quay\",\n  \"items\": [\n    { \"productId\": 1, \"variantId\": null, \"quantity\": 1 }\n  ]\n}\n"
-            },
+            "body": { "mode": "raw", "raw": "{\n  \"branchId\": 1,\n  \"customerId\": 1,\n  \"notes\": \"Ban tai quay\",\n  \"items\": [\n    { \"productId\": 1, \"variantId\": null, \"quantity\": 1 }\n  ]\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/sales-orders", "host": ["{{baseUrl}}"], "path": ["api", "sales-orders"] }
           },
           "response": []
@@ -705,12 +660,7 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
-            "url": {
-              "raw": "{{baseUrl}}/api/reports/inventory-summary?branchId=1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reports", "inventory-summary"],
-              "query": [{ "key": "branchId", "value": "1" }]
-            }
+            "url": { "raw": "{{baseUrl}}/api/reports/inventory-summary?branchId=1", "host": ["{{baseUrl}}"], "path": ["api", "reports", "inventory-summary"], "query": [{ "key": "branchId", "value": "1" }] }
           },
           "response": []
         }
@@ -727,10 +677,7 @@
               { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
               { "key": "Content-Type", "value": "application/json", "type": "text" }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"salesOrderId\": 1,\n  \"carrierName\": \"GHTK\",\n  \"serviceName\": \"FAST\",\n  \"trackingNumber\": \"TRK-0001\",\n  \"receiverName\": \"Nguyen Van A\",\n  \"receiverPhone\": \"0901234567\",\n  \"receiverAddress\": \"123 ABC, HCM\",\n  \"shippingFee\": 20000,\n  \"codAmount\": 0\n}\n"
-            },
+            "body": { "mode": "raw", "raw": "{\n  \"salesOrderId\": 1,\n  \"carrierName\": \"GHTK\",\n  \"serviceName\": \"FAST\",\n  \"trackingNumber\": \"TRK-0001\",\n  \"receiverName\": \"Nguyen Van A\",\n  \"receiverPhone\": \"0901234567\",\n  \"receiverAddress\": \"123 ABC, HCM\",\n  \"shippingFee\": 20000,\n  \"codAmount\": 0\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/shipments", "host": ["{{baseUrl}}"], "path": ["api", "shipments"] }
           },
           "response": []
@@ -750,6 +697,81 @@
             ],
             "body": { "mode": "raw", "raw": "{\n  \"status\": \"SHIPPING\",\n  \"shippedAt\": null,\n  \"deliveredAt\": null\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/shipments/1/status", "host": ["{{baseUrl}}"], "path": ["api", "shipments", "1", "status"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10) Omnichannel / Integrations (v1)",
+      "item": [
+        {
+          "name": "GET /api/v1/integrations/channels",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/integrations/channels", "host": ["{{baseUrl}}"], "path": ["api", "v1", "integrations", "channels"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/integrations/channels",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"channelType\": \"SHOPEE\",\n  \"channelName\": \"Shopee Shop 1\",\n  \"channelCode\": \"SHOPEE_1\",\n  \"status\": \"ACTIVE\",\n  \"configJson\": \"{\\\"mock\\\":true}\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/integrations/channels", "host": ["{{baseUrl}}"], "path": ["api", "v1", "integrations", "channels"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/integrations/product-mappings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/integrations/product-mappings", "host": ["{{baseUrl}}"], "path": ["api", "v1", "integrations", "product-mappings"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/integrations/product-mappings",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"channelId\": {{channelId}},\n  \"productId\": 100,\n  \"variantId\": null,\n  \"externalProductId\": \"EXT-P-001\",\n  \"externalVariantId\": null,\n  \"externalSku\": \"EXT-SKU-001\",\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/integrations/product-mappings", "host": ["{{baseUrl}}"], "path": ["api", "v1", "integrations", "product-mappings"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/integrations/{channelId}/sync-orders",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/integrations/{{channelId}}/sync-orders", "host": ["{{baseUrl}}"], "path": ["api", "v1", "integrations", "{{channelId}}", "sync-orders"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/online-orders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/online-orders?channelId={{channelId}}&status=SYNCED",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "online-orders"],
+              "query": [
+                { "key": "channelId", "value": "{{channelId}}" },
+                { "key": "status", "value": "SYNCED" }
+              ]
+            }
           },
           "response": []
         }

@@ -1,6 +1,7 @@
 package com.yourcompany.salesmanagement.module.user.service.impl;
 
 import com.yourcompany.salesmanagement.exception.BusinessException;
+import com.yourcompany.salesmanagement.common.audit.AuditLoggable;
 import com.yourcompany.salesmanagement.common.security.SecurityUtils;
 import com.yourcompany.salesmanagement.module.auth.service.dto.UserPrincipal;
 import com.yourcompany.salesmanagement.module.user.dto.request.AssignRolesRequest;
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "user", action = "CREATE", entityType = "User")
     public UserDetailResponse createUser(CreateUserRequest request) {
         if (userRepository.findByUsername(request.username()).isPresent()) {
             throw new BusinessException("Username already exists", HttpStatus.CONFLICT);
@@ -77,6 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "user", action = "UPDATE", entityType = "User")
     public UserDetailResponse updateUser(Long id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("User not found", HttpStatus.NOT_FOUND));
@@ -93,6 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "user", action = "ASSIGN_ROLES", entityType = "User")
     public UserDetailResponse assignRoles(Long userId, AssignRolesRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException("User not found", HttpStatus.NOT_FOUND));
@@ -124,6 +128,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @AuditLoggable(module = "user", action = "RESET_PASSWORD", entityType = "User")
     public void adminResetPassword(Long userId, ResetPasswordRequest request) {
         UserPrincipal principal = SecurityUtils.requirePrincipal();
         if (!isAdminLike(principal)) {

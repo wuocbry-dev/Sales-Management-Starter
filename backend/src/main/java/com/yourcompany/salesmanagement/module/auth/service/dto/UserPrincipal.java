@@ -12,6 +12,7 @@ public record UserPrincipal(
         Long storeId,
         Long branchId,
         List<String> roleCodes,
+        List<String> permissionCodes,
         Collection<? extends GrantedAuthority> authorities
 ) implements UserDetails {
     @Override

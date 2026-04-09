@@ -7,6 +7,7 @@ public record MeResponse(
         String username,
         String fullName,
         List<String> roleCodes,
+        List<String> permissionCodes,
         Long storeId,
         Long branchId
 ) {}

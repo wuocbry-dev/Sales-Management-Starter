@@ -1,12 +1,20 @@
 package com.yourcompany.salesmanagement.module.product.controller;
 
 import com.yourcompany.salesmanagement.common.base.BaseResponse;
+import com.yourcompany.salesmanagement.module.importjob.dto.response.ImportJobResponse;
 import com.yourcompany.salesmanagement.module.product.dto.request.CreateProductRequest;
 import com.yourcompany.salesmanagement.module.product.dto.request.UpdateProductRequest;
 import com.yourcompany.salesmanagement.module.product.dto.response.ProductResponse;
 import com.yourcompany.salesmanagement.module.product.service.ProductService;
+import com.yourcompany.salesmanagement.module.product.service.ProductImportExportService;
 import jakarta.validation.Valid;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,9 +23,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductImportExportService productImportExportService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductImportExportService productImportExportService) {
         this.productService = productService;
+        this.productImportExportService = productImportExportService;
     }
 
     @GetMapping
@@ -48,5 +58,21 @@ public class ProductController {
     public BaseResponse<Object> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return BaseResponse.ok("Product deleted successfully", null);
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('PRODUCT_IMPORT') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    public BaseResponse<ImportJobResponse> importProducts(@RequestPart("file") MultipartFile file) {
+        return BaseResponse.ok("Import job created successfully", productImportExportService.startImport(file));
+    }
+
+    @GetMapping("/export")
+    @PreAuthorize("hasAuthority('PRODUCT_EXPORT') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    public ResponseEntity<Resource> exportProducts() {
+        Resource csv = productImportExportService.exportCsv();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"products.csv\"")
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(csv);
     }
 }

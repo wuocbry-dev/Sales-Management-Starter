@@ -3,7 +3,10 @@ package com.yourcompany.salesmanagement.module.loyalty.service.impl;
 import com.yourcompany.salesmanagement.common.security.SecurityUtils;
 import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.customer.repository.CustomerRepository;
+import com.yourcompany.salesmanagement.module.customer.entity.Customer;
+import com.yourcompany.salesmanagement.module.loyalty.dto.request.RedeemLoyaltyRequest;
 import com.yourcompany.salesmanagement.module.loyalty.dto.response.LoyaltyAccountResponse;
+import com.yourcompany.salesmanagement.module.loyalty.dto.response.LoyaltyRedeemResponse;
 import com.yourcompany.salesmanagement.module.loyalty.dto.response.LoyaltyTransactionResponse;
 import com.yourcompany.salesmanagement.module.loyalty.entity.LoyaltyAccount;
 import com.yourcompany.salesmanagement.module.loyalty.entity.LoyaltyTransaction;
@@ -97,6 +100,57 @@ public class LoyaltyServiceImpl implements LoyaltyService {
         tx.setPointsChange(points);
         tx.setDescription(description);
         loyaltyTransactionRepository.save(tx);
+    }
+
+    @Override
+    @Transactional
+    public LoyaltyRedeemResponse redeem(RedeemLoyaltyRequest request) {
+        Long storeId = SecurityUtils.requireStoreId();
+        Long customerId = request.customerId();
+        int points = request.points();
+        if (points <= 0) {
+            throw new BusinessException("points must be >= 1", HttpStatus.BAD_REQUEST);
+        }
+
+        Customer c = customerRepository.findByIdAndStoreId(customerId, storeId)
+                .orElseThrow(() -> new BusinessException("Customer not found", HttpStatus.NOT_FOUND));
+
+        LoyaltyAccount acc = loyaltyAccountRepository.findForUpdateFirstByStoreIdAndCustomerId(storeId, customerId)
+                .orElseGet(() -> {
+                    LoyaltyAccount a = new LoyaltyAccount();
+                    a.setStoreId(storeId);
+                    a.setCustomerId(customerId);
+                    a.setCurrentPoints(0);
+                    a.setLifetimePoints(0);
+                    a.setTierName("SILVER");
+                    return loyaltyAccountRepository.save(a);
+                });
+
+        int current = acc.getCurrentPoints() == null ? 0 : acc.getCurrentPoints();
+        if (current < points) {
+            throw new BusinessException("Insufficient loyalty points. Current=" + current + ", requested=" + points, HttpStatus.BAD_REQUEST);
+        }
+
+        acc.setCurrentPoints(current - points);
+        loyaltyAccountRepository.save(acc);
+
+        // Keep customer.totalPoints consistent with current points (MVP)
+        Integer custPoints = c.getTotalPoints() == null ? 0 : c.getTotalPoints();
+        c.setTotalPoints(Math.max(0, custPoints - points));
+        customerRepository.save(c);
+
+        LoyaltyTransaction tx = new LoyaltyTransaction();
+        tx.setLoyaltyAccountId(acc.getId());
+        tx.setReferenceType(request.salesOrderId() == null ? "REDEEM" : "SALES_ORDER");
+        tx.setReferenceId(request.salesOrderId());
+        tx.setPointsChange(-points);
+        tx.setDescription(request.description() == null || request.description().isBlank()
+                ? ("Redeem " + points + " points")
+                : request.description().trim());
+        tx = loyaltyTransactionRepository.save(tx);
+
+        var txResp = toTxResponse(tx);
+        return new LoyaltyRedeemResponse(toAccountResponse(acc), txResp);
     }
 
     private LoyaltyAccountResponse toAccountResponse(LoyaltyAccount a) {

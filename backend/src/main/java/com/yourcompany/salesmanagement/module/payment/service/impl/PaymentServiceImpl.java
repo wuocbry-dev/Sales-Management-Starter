@@ -1,6 +1,7 @@
 package com.yourcompany.salesmanagement.module.payment.service.impl;
 
 import com.yourcompany.salesmanagement.common.security.SecurityUtils;
+import com.yourcompany.salesmanagement.common.audit.AuditLoggable;
 import com.yourcompany.salesmanagement.exception.BusinessException;
 import com.yourcompany.salesmanagement.module.auth.service.dto.UserPrincipal;
 import com.yourcompany.salesmanagement.module.cashbook.entity.CashbookEntry;
@@ -44,6 +45,7 @@ public class PaymentServiceImpl implements com.yourcompany.salesmanagement.modul
 
     @Override
     @Transactional
+    @AuditLoggable(module = "payment", action = "CREATE", entityType = "Payment")
     public PaymentResponse createPayment(CreatePaymentRequest request) {
         Long storeId = SecurityUtils.requireStoreId();
         UserPrincipal principal = SecurityUtils.requirePrincipal();

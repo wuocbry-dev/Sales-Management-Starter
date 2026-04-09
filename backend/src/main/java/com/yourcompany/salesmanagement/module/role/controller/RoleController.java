@@ -5,6 +5,7 @@ import com.yourcompany.salesmanagement.module.role.dto.request.CreateRoleRequest
 import com.yourcompany.salesmanagement.module.role.dto.response.RoleResponse;
 import com.yourcompany.salesmanagement.module.role.service.RoleService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,13 @@ public class RoleController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER')")
     public BaseResponse<List<RoleResponse>> getRoles() {
         return BaseResponse.ok("Roles fetched successfully", roleService.getRoles());
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER')")
     public BaseResponse<RoleResponse> create(@Valid @RequestBody CreateRoleRequest request) {
         return BaseResponse.ok("Role created successfully", roleService.create(request));
     }

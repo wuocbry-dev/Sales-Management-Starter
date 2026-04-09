@@ -52,6 +52,21 @@ public class SalesOrder {
     @Column(name = "paid_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal paidAmount;
 
+    @Column(name = "applied_voucher_id")
+    private Long appliedVoucherId;
+
+    @Column(name = "applied_voucher_code", length = 50)
+    private String appliedVoucherCode;
+
+    @Column(name = "applied_promotion_id")
+    private Long appliedPromotionId;
+
+    @Column(name = "applied_promotion_code", length = 50)
+    private String appliedPromotionCode;
+
+    @Column(name = "discount_source", length = 20)
+    private String discountSource;
+
     @Column(length = 500)
     private String notes;
 

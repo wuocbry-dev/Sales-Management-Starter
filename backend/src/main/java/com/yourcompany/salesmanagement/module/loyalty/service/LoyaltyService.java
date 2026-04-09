@@ -1,6 +1,8 @@
 package com.yourcompany.salesmanagement.module.loyalty.service;
 
 import com.yourcompany.salesmanagement.module.loyalty.dto.response.LoyaltyAccountResponse;
+import com.yourcompany.salesmanagement.module.loyalty.dto.request.RedeemLoyaltyRequest;
+import com.yourcompany.salesmanagement.module.loyalty.dto.response.LoyaltyRedeemResponse;
 import com.yourcompany.salesmanagement.module.loyalty.dto.response.LoyaltyTransactionResponse;
 
 import java.util.List;
@@ -11,5 +13,7 @@ public interface LoyaltyService {
     List<LoyaltyTransactionResponse> getTransactionsByCustomerId(Long customerId);
 
     void earnPointsForSalesOrder(Long customerId, Long salesOrderId, int points, String description);
+
+    LoyaltyRedeemResponse redeem(RedeemLoyaltyRequest request);
 }
 
