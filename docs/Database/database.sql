@@ -1,3 +1,6 @@
+-- ============================================================
+-- Sales Management Starter - Database (ALL-IN-ONE)
+-- Generated: 2026-04-09
 -- MySQL 8.0+ schema for Sales Management Starter
 -- Charset: utf8mb4 / Collation: utf8mb4_unicode_ci
 
@@ -539,22 +542,9 @@ CREATE TABLE loyalty_transactions (
     INDEX idx_loyalty_transactions_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE audit_logs (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    store_id BIGINT UNSIGNED NULL,
-    user_id BIGINT UNSIGNED NULL,
-    action_name VARCHAR(100) NOT NULL,
-    module_name VARCHAR(50) NOT NULL,
-    reference_type VARCHAR(50) NULL,
-    reference_id BIGINT UNSIGNED NULL,
-    ip_address VARCHAR(45) NULL,
-    user_agent VARCHAR(255) NULL,
-    details_json JSON NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_audit_logs_store FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE SET NULL,
-    CONSTRAINT fk_audit_logs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
-    INDEX idx_audit_logs_created_at (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- NOTE:
+-- - audit_logs schema used by current backend is defined in V2_1 section below.
+-- - We intentionally DO NOT create audit_logs here in V1 section to keep this all-in-one SQL consistent.
 
 CREATE TABLE settings (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -611,45 +601,253 @@ JOIN products p ON p.id = i.product_id
 LEFT JOIN product_variants pv ON pv.id = i.variant_id;
 
 -- =========================
--- Returns (merged from V2)
+-- V1_3__sales_orders_discount_source.sql
 -- =========================
 
-CREATE TABLE IF NOT EXISTS return_orders (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    store_id BIGINT UNSIGNED NOT NULL,
-    branch_id BIGINT UNSIGNED NOT NULL,
-    sales_order_id BIGINT UNSIGNED NOT NULL,
-    return_number VARCHAR(50) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'DRAFT',
-    subtotal DECIMAL(15,2) NOT NULL DEFAULT 0,
-    refund_amount DECIMAL(15,2) NOT NULL DEFAULT 0,
-    notes VARCHAR(500) NULL,
-    created_by BIGINT UNSIGNED NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT uk_return_orders_number UNIQUE (return_number),
-    CONSTRAINT fk_return_orders_store FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE,
-    CONSTRAINT fk_return_orders_branch FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_return_orders_sales_order FOREIGN KEY (sales_order_id) REFERENCES sales_orders(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_return_orders_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
-    INDEX idx_return_orders_sales_order (sales_order_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE sales_orders
+  ADD COLUMN applied_voucher_id BIGINT NULL,
+  ADD COLUMN applied_voucher_code VARCHAR(50) NULL,
+  ADD COLUMN applied_promotion_id BIGINT NULL,
+  ADD COLUMN applied_promotion_code VARCHAR(50) NULL,
+  ADD COLUMN discount_source VARCHAR(20) NULL;
 
-CREATE TABLE IF NOT EXISTS return_order_items (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    return_order_id BIGINT UNSIGNED NOT NULL,
-    sales_order_item_id BIGINT UNSIGNED NULL,
-    product_id BIGINT UNSIGNED NOT NULL,
-    variant_id BIGINT UNSIGNED NULL,
-    product_name VARCHAR(200) NOT NULL,
-    sku VARCHAR(100) NOT NULL,
-    unit_price DECIMAL(15,2) NOT NULL,
-    quantity DECIMAL(15,2) NOT NULL,
-    line_total DECIMAL(15,2) NOT NULL,
-    CONSTRAINT fk_return_items_return FOREIGN KEY (return_order_id) REFERENCES return_orders(id) ON DELETE CASCADE,
-    CONSTRAINT fk_return_items_sales_order_item FOREIGN KEY (sales_order_item_id) REFERENCES sales_order_items(id) ON DELETE SET NULL,
-    CONSTRAINT fk_return_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_return_items_variant FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE SET NULL,
-    INDEX idx_return_items_return (return_order_id),
-    INDEX idx_return_items_so_item (sales_order_item_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- =========================
+-- V2_1__create_audit_logs.sql (override V1 audit_logs)
+-- =========================
+
+DROP TABLE IF EXISTS audit_logs;
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  store_id BIGINT NOT NULL,
+  branch_id BIGINT NULL,
+  actor_user_id BIGINT NULL,
+  actor_username VARCHAR(100) NULL,
+  module VARCHAR(50) NOT NULL,
+  action VARCHAR(50) NOT NULL,
+  entity_type VARCHAR(100) NULL,
+  entity_id BIGINT NULL,
+  message VARCHAR(500) NULL,
+  ip VARCHAR(50) NULL,
+  user_agent VARCHAR(255) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- MySQL-compatible idempotent index creation (no CREATE INDEX IF NOT EXISTS in MySQL)
+SET @sql := (
+  SELECT IF(
+    EXISTS(
+      SELECT 1
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = 'audit_logs'
+        AND index_name = 'idx_audit_logs_store_created'
+    ),
+    'SELECT 1',
+    'CREATE INDEX idx_audit_logs_store_created ON audit_logs(store_id, created_at)'
+  )
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql := (
+  SELECT IF(
+    EXISTS(
+      SELECT 1
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = 'audit_logs'
+        AND index_name = 'idx_audit_logs_store_module'
+    ),
+    'SELECT 1',
+    'CREATE INDEX idx_audit_logs_store_module ON audit_logs(store_id, module)'
+  )
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql := (
+  SELECT IF(
+    EXISTS(
+      SELECT 1
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = 'audit_logs'
+        AND index_name = 'idx_audit_logs_store_actor'
+    ),
+    'SELECT 1',
+    'CREATE INDEX idx_audit_logs_store_actor ON audit_logs(store_id, actor_user_id)'
+  )
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql := (
+  SELECT IF(
+    EXISTS(
+      SELECT 1
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = 'audit_logs'
+        AND index_name = 'idx_audit_logs_store_branch'
+    ),
+    'SELECT 1',
+    'CREATE INDEX idx_audit_logs_store_branch ON audit_logs(store_id, branch_id)'
+  )
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- =========================
+-- V2_2__purchase_returns.sql
+-- =========================
+
+CREATE TABLE IF NOT EXISTS purchase_returns (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  store_id BIGINT NOT NULL,
+  branch_id BIGINT NOT NULL,
+  supplier_id BIGINT NOT NULL,
+  purchase_order_id BIGINT NOT NULL,
+  return_number VARCHAR(50) NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  total_quantity DECIMAL(15,2) NOT NULL DEFAULT 0,
+  total_amount DECIMAL(15,2) NOT NULL DEFAULT 0,
+  reason VARCHAR(500) NULL,
+  created_by BIGINT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS purchase_return_items (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  purchase_return_id BIGINT NOT NULL,
+  purchase_order_item_id BIGINT NOT NULL,
+  product_id BIGINT NOT NULL,
+  variant_id BIGINT NULL,
+  quantity DECIMAL(15,2) NOT NULL,
+  unit_cost DECIMAL(15,2) NOT NULL,
+  line_total DECIMAL(15,2) NOT NULL
+);
+
+SET @sql := (
+  SELECT IF(
+    EXISTS(
+      SELECT 1
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = 'purchase_returns'
+        AND index_name = 'idx_purchase_returns_store_po'
+    ),
+    'SELECT 1',
+    'CREATE INDEX idx_purchase_returns_store_po ON purchase_returns(store_id, purchase_order_id)'
+  )
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql := (
+  SELECT IF(
+    EXISTS(
+      SELECT 1
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = 'purchase_return_items'
+        AND index_name = 'idx_purchase_return_items_pr'
+    ),
+    'SELECT 1',
+    'CREATE INDEX idx_purchase_return_items_pr ON purchase_return_items(purchase_return_id)'
+  )
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @sql := (
+  SELECT IF(
+    EXISTS(
+      SELECT 1
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = 'purchase_return_items'
+        AND index_name = 'idx_purchase_return_items_poi'
+    ),
+    'SELECT 1',
+    'CREATE INDEX idx_purchase_return_items_poi ON purchase_return_items(purchase_order_item_id)'
+  )
+);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- =========================
+-- V3_1__import_jobs.sql
+-- =========================
+
+CREATE TABLE IF NOT EXISTS import_jobs (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  store_id BIGINT NOT NULL,
+  type VARCHAR(50) NOT NULL,
+  status VARCHAR(30) NOT NULL,
+  original_filename VARCHAR(255),
+  content_type VARCHAR(100),
+  created_by BIGINT,
+  total_rows INT,
+  success_rows INT,
+  failed_rows INT,
+  error_message VARCHAR(1000),
+  result_file_path VARCHAR(500),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  started_at TIMESTAMP NULL,
+  finished_at TIMESTAMP NULL,
+  INDEX idx_import_jobs_store_created (store_id, created_at),
+  INDEX idx_import_jobs_store_status (store_id, status)
+);
+
+-- =========================
+-- V3_2__e_invoices.sql
+-- =========================
+
+CREATE TABLE IF NOT EXISTS e_invoices (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  store_id BIGINT NOT NULL,
+  sales_order_id BIGINT NOT NULL,
+  status VARCHAR(30) NOT NULL,
+  provider_name VARCHAR(50),
+  provider_invoice_id VARCHAR(100),
+  invoice_number VARCHAR(50),
+  buyer_name VARCHAR(200),
+  buyer_tax_code VARCHAR(50),
+  buyer_address VARCHAR(255),
+  buyer_email VARCHAR(150),
+  subtotal DECIMAL(15,2) NOT NULL,
+  tax_amount DECIMAL(15,2) NOT NULL,
+  total_amount DECIMAL(15,2) NOT NULL,
+  issued_at TIMESTAMP NULL,
+  error_message VARCHAR(1000),
+  created_by BIGINT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_e_invoices_store_order (store_id, sales_order_id),
+  INDEX idx_e_invoices_store_status (store_id, status),
+  INDEX idx_e_invoices_store_created (store_id, created_at)
+);
+
+-- =========================
+-- V3_3__online_orders.sql
+-- =========================
+
+CREATE TABLE IF NOT EXISTS online_orders (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  store_id BIGINT NOT NULL,
+  channel_id BIGINT NOT NULL,
+  external_order_id VARCHAR(100) NOT NULL,
+  status VARCHAR(30) NOT NULL,
+  external_order_number VARCHAR(100),
+  buyer_name VARCHAR(200),
+  buyer_phone VARCHAR(30),
+  shipping_address VARCHAR(255),
+  subtotal DECIMAL(15,2) NOT NULL,
+  discount_amount DECIMAL(15,2) NOT NULL,
+  shipping_fee DECIMAL(15,2) NOT NULL,
+  total_amount DECIMAL(15,2) NOT NULL,
+  items_json JSON,
+  raw_payload JSON,
+  synced_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_online_orders_store_channel_ext (store_id, channel_id, external_order_id),
+  INDEX idx_online_orders_store_created (store_id, created_at),
+  INDEX idx_online_orders_store_status (store_id, status),
+  INDEX idx_online_orders_store_channel (store_id, channel_id)
+);
+
