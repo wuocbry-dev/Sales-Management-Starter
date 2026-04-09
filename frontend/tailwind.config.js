@@ -12,7 +12,8 @@ export default {
         accent: {
           DEFAULT: "#14B8A6",
           light: "#F0FDFA"
-        }
+        },
+        surface: "#F8FAFC"
       },
       borderRadius: {
         DEFAULT: "0.5rem",

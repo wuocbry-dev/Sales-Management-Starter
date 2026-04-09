@@ -6,6 +6,7 @@ import LoginPage from "../../features/auth/pages/LoginPage";
 import RegisterPage from "../../features/auth/pages/RegisterPage";
 import DashboardPage from "../../features/dashboard/pages/DashboardPage";
 import ProductListPage from "../../features/product/pages/ProductListPage";
+import ProductCreatePage from "../../features/product/pages/ProductCreatePage";
 import CustomerListPage from "../../features/customer/pages/CustomerListPage";
 import SalesOrderListPage from "../../features/sales-order/pages/SalesOrderListPage";
 import ReportPage from "../../features/report/pages/ReportPage";
@@ -38,6 +39,7 @@ export const router = createBrowserRouter(
     children: [
       { index: true, element: <DashboardPage /> },
       { path: "products", element: <ProductListPage /> },
+      { path: "products/new", element: <ProductCreatePage /> },
       { path: "customers", element: <CustomerListPage /> },
       { path: "orders", element: <SalesOrderListPage /> },
       { path: "reports", element: <ReportPage /> },
