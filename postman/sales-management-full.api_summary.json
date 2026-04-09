@@ -55,10 +55,16 @@
     { "module": "inventory", "method": "GET", "path": "/api/inventories", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "inventory", "method": "GET", "path": "/api/inventories/{id}", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "inventory", "method": "POST", "path": "/api/inventories/adjust", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.inventory.dto.request.InventoryAdjustRequest" },
+    { "module": "inventory", "method": "GET", "path": "/api/inventories/threshold", "authRequired": true, "bodyType": "none", "requestDto": null },
+    { "module": "inventory", "method": "PUT", "path": "/api/inventories/threshold", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.inventory.dto.request.UpsertInventoryThresholdRequest" },
+    { "module": "inventory", "method": "GET", "path": "/api/v1/inventory/warnings", "authRequired": true, "bodyType": "none", "requestDto": null },
 
     { "module": "purchaseorder", "method": "POST", "path": "/api/purchase-orders", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.purchaseorder.dto.request.CreatePurchaseOrderRequest" },
     { "module": "purchaseorder", "method": "GET", "path": "/api/purchase-orders", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "purchaseorder", "method": "GET", "path": "/api/purchase-orders/{id}", "authRequired": true, "bodyType": "none", "requestDto": null },
+    { "module": "purchaseorder", "method": "POST", "path": "/api/purchase-orders/{id}/receive", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.purchaseorder.dto.request.ReceivePurchaseOrderRequest" },
+    { "module": "purchaseorder", "method": "POST", "path": "/api/purchase-orders/{id}/cancel", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.purchaseorder.dto.request.CancelPurchaseOrderRequest" },
+    { "module": "purchaseorder", "method": "POST", "path": "/api/purchase-orders/{id}/return", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.purchaseorder.dto.request.CreatePurchaseReturnRequest" },
 
     { "module": "customer", "method": "GET", "path": "/api/customers", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "customer", "method": "GET", "path": "/api/customers/{id}", "authRequired": true, "bodyType": "none", "requestDto": null },
@@ -69,6 +75,7 @@
     { "module": "salesorder", "method": "POST", "path": "/api/sales-orders", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.salesorder.dto.request.CreateSalesOrderRequest" },
     { "module": "salesorder", "method": "GET", "path": "/api/sales-orders", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "salesorder", "method": "GET", "path": "/api/sales-orders/{id}", "authRequired": true, "bodyType": "none", "requestDto": null },
+    { "module": "salesorder", "method": "GET", "path": "/api/sales-orders/{id}/invoice", "authRequired": true, "bodyType": "none", "requestDto": null },
 
     { "module": "payment", "method": "POST", "path": "/api/payments", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.payment.dto.request.CreatePaymentRequest" },
     { "module": "payment", "method": "GET", "path": "/api/payments/{id}", "authRequired": true, "bodyType": "none", "requestDto": null },
@@ -78,10 +85,16 @@
     { "module": "dashboard", "method": "GET", "path": "/api/dashboard/summary", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "report", "method": "GET", "path": "/api/reports/sales-summary", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "report", "method": "GET", "path": "/api/reports/inventory-summary", "authRequired": true, "bodyType": "none", "requestDto": null },
+    { "module": "report", "method": "GET", "path": "/api/reports/end-of-day", "authRequired": true, "bodyType": "none", "requestDto": null },
 
     { "module": "shipment", "method": "POST", "path": "/api/shipments", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.shipment.dto.request.CreateShipmentRequest" },
     { "module": "shipment", "method": "GET", "path": "/api/shipments/{id}", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "shipment", "method": "PUT", "path": "/api/shipments/{id}/status", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.shipment.dto.request.UpdateShipmentStatusRequest" },
+
+    { "module": "shift", "method": "POST", "path": "/api/v1/shifts/open", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.shift.dto.request.OpenShiftRequest" },
+    { "module": "shift", "method": "POST", "path": "/api/v1/shifts/{id}/close", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.shift.dto.request.CloseShiftRequest" },
+    { "module": "shift", "method": "GET", "path": "/api/v1/shifts/current", "authRequired": true, "bodyType": "none", "requestDto": null },
+    { "module": "shift", "method": "GET", "path": "/api/v1/shifts/{id}/summary", "authRequired": true, "bodyType": "none", "requestDto": null },
 
     { "module": "integration.ecommerce", "method": "GET", "path": "/api/v1/integrations/channels", "authRequired": true, "bodyType": "none", "requestDto": null },
     { "module": "integration.ecommerce", "method": "POST", "path": "/api/v1/integrations/channels", "authRequired": true, "bodyType": "raw-json", "requestDto": "com.yourcompany.salesmanagement.module.integration.ecommerce.dto.request.CreateIntegrationChannelRequest" },

@@ -482,6 +482,45 @@
           "response": []
         },
         {
+          "name": "POST /api/purchase-orders/{id}/receive",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"lines\": [\n    { \"itemId\": 1, \"quantity\": 5 }\n  ]\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/purchase-orders/1/receive", "host": ["{{baseUrl}}"], "path": ["api", "purchase-orders", "1", "receive"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/purchase-orders/{id}/cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Hủy phiếu nhập\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/purchase-orders/1/cancel", "host": ["{{baseUrl}}"], "path": ["api", "purchase-orders", "1", "cancel"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/purchase-orders/{id}/return",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Trả hàng nhập\",\n  \"items\": [\n    { \"purchaseOrderItemId\": 1, \"quantity\": 1 }\n  ]\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/purchase-orders/1/return", "host": ["{{baseUrl}}"], "path": ["api", "purchase-orders", "1", "return"] }
+          },
+          "response": []
+        },
+        {
           "name": "GET /api/inventories?branchId={branchId}",
           "request": {
             "method": "GET",
@@ -505,6 +544,38 @@
             ],
             "body": { "mode": "raw", "raw": "{\n  \"branchId\": 1,\n  \"productId\": 1,\n  \"variantId\": null,\n  \"deltaQuantity\": 2,\n  \"reason\": \"Kiem ke tang\"\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/inventories/adjust", "host": ["{{baseUrl}}"], "path": ["api", "inventories", "adjust"] }
+          },
+          "response": []
+        }
+        ,
+        {
+          "name": "GET /api/inventories/threshold",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/inventories/threshold?branchId=1", "host": ["{{baseUrl}}"], "path": ["api", "inventories", "threshold"], "query": [{ "key": "branchId", "value": "1" }] }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/inventories/threshold",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"branchId\": 1,\n  \"productId\": 1,\n  \"variantId\": null,\n  \"minQuantity\": 5,\n  \"maxQuantity\": 200\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/inventories/threshold", "host": ["{{baseUrl}}"], "path": ["api", "inventories", "threshold"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/inventory/warnings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/inventory/warnings?branchId=1", "host": ["{{baseUrl}}"], "path": ["api", "v1", "inventory", "warnings"], "query": [{ "key": "branchId", "value": "1" }] }
           },
           "response": []
         }
@@ -589,6 +660,15 @@
           "name": "GET /api/sales-orders/{id}",
           "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/sales-orders/1", "host": ["{{baseUrl}}"], "path": ["api", "sales-orders", "1"] } },
           "response": []
+        },
+        {
+          "name": "GET /api/sales-orders/{id}/invoice",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/sales-orders/1/invoice", "host": ["{{baseUrl}}"], "path": ["api", "sales-orders", "1", "invoice"] }
+          },
+          "response": []
         }
       ]
     },
@@ -663,6 +743,23 @@
             "url": { "raw": "{{baseUrl}}/api/reports/inventory-summary?branchId=1", "host": ["{{baseUrl}}"], "path": ["api", "reports", "inventory-summary"], "query": [{ "key": "branchId", "value": "1" }] }
           },
           "response": []
+        },
+        {
+          "name": "GET /api/reports/end-of-day",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/end-of-day?branchId=1&date=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "end-of-day"],
+              "query": [
+                { "key": "branchId", "value": "1" },
+                { "key": "date", "value": "" }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -703,7 +800,61 @@
       ]
     },
     {
-      "name": "10) Omnichannel / Integrations (v1)",
+      "name": "10) Shift (POS Cash Register)",
+      "item": [
+        {
+          "name": "POST /api/v1/shifts/open",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"branchId\": 1,\n  \"openingCash\": 500000,\n  \"note\": \"Mở ca\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/shifts/open", "host": ["{{baseUrl}}"], "path": ["api", "v1", "shifts", "open"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/shifts/{id}/close",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"closingCash\": 780000,\n  \"note\": \"Đóng ca\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/shifts/1/close", "host": ["{{baseUrl}}"], "path": ["api", "v1", "shifts", "1", "close"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/shifts/current",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shifts/current?branchId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "shifts", "current"],
+              "query": [{ "key": "branchId", "value": "1" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/shifts/{id}/summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/shifts/1/summary", "host": ["{{baseUrl}}"], "path": ["api", "v1", "shifts", "1", "summary"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11) Omnichannel / Integrations (v1)",
       "item": [
         {
           "name": "GET /api/v1/integrations/channels",
