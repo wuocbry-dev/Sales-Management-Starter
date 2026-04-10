@@ -21,25 +21,25 @@ public class EmployeeController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('EMPLOYEE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<EmployeeResponse>> getEmployees() {
         return BaseResponse.ok("Employees fetched successfully", employeeService.getEmployees());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('EMPLOYEE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<EmployeeResponse> getById(@PathVariable Long id) {
         return BaseResponse.ok("Employee fetched successfully", employeeService.getById(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('EMPLOYEE_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('EMPLOYEE_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<EmployeeResponse> createEmployee(@Valid @RequestBody CreateEmployeeRequest request) {
         return BaseResponse.ok("Employee created successfully", employeeService.createEmployee(request));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('EMPLOYEE_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('EMPLOYEE_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<EmployeeResponse> update(@PathVariable Long id, @Valid @RequestBody UpdateEmployeeRequest request) {
         return BaseResponse.ok("Employee updated successfully", employeeService.update(id, request));
     }

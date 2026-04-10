@@ -22,13 +22,13 @@ public class InventoryOverviewController {
     }
 
     @GetMapping("/overview")
-    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<InventoryOverviewResponse>> overview(@RequestParam @NotNull Long branchId) {
         return BaseResponse.ok("Inventory overview fetched successfully", inventoryOverviewService.getOverviewByBranch(branchId));
     }
 
     @GetMapping("/warnings")
-    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<InventoryOverviewResponse>> warnings(@RequestParam @NotNull Long branchId) {
         return BaseResponse.ok("Low-stock warnings fetched successfully", inventoryOverviewService.getWarningsByBranch(branchId));
     }

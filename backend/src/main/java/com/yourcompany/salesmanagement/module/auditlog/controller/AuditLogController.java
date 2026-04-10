@@ -22,7 +22,7 @@ public class AuditLogController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('AUDITLOG_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER','SYSTEM_ADMIN')")
+    @PreAuthorize("hasAuthority('AUDITLOG_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER','SYSTEM_ADMIN')")
     public BaseResponse<List<AuditLogResponse>> search(
             @RequestParam(required = false) LocalDateTime from,
             @RequestParam(required = false) LocalDateTime to,

@@ -30,31 +30,31 @@ public class InventoryController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<InventoryResponse>> listByBranch(@RequestParam @NotNull Long branchId) {
         return BaseResponse.ok("Inventories fetched successfully", inventoryService.listByBranch(branchId));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<InventoryResponse> getById(@PathVariable Long id) {
         return BaseResponse.ok("Inventory fetched successfully", inventoryService.getById(id));
     }
 
     @PostMapping("/adjust")
-    @PreAuthorize("hasAuthority('INVENTORY_ADJUST') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INVENTORY_ADJUST') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<InventoryResponse> adjust(@Valid @RequestBody InventoryAdjustRequest request) {
         return BaseResponse.ok("Inventory adjusted successfully", inventoryService.adjust(request));
     }
 
     @GetMapping("/threshold")
-    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INVENTORY_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<InventoryThresholdResponse>> getThresholds(@RequestParam @NotNull Long branchId) {
         return BaseResponse.ok("Inventory thresholds fetched successfully", inventoryService.listThresholdsByBranch(branchId));
     }
 
     @PutMapping("/threshold")
-    @PreAuthorize("hasAuthority('INVENTORY_ADJUST') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INVENTORY_ADJUST') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<InventoryThresholdResponse> upsertThreshold(@Valid @RequestBody UpsertInventoryThresholdRequest request) {
         return BaseResponse.ok("Inventory threshold updated successfully", inventoryService.upsertThreshold(request));
     }

@@ -27,19 +27,19 @@ public class LoyaltyController {
     }
 
     @GetMapping("/account")
-    @PreAuthorize("hasAuthority('LOYALTY_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('LOYALTY_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<LoyaltyAccountResponse> account(@RequestParam Long customerId) {
         return BaseResponse.ok("OK", loyaltyService.getAccountByCustomerId(customerId));
     }
 
     @GetMapping("/transactions")
-    @PreAuthorize("hasAuthority('LOYALTY_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('LOYALTY_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<LoyaltyTransactionResponse>> transactions(@RequestParam Long customerId) {
         return BaseResponse.ok("OK", loyaltyService.getTransactionsByCustomerId(customerId));
     }
 
     @PostMapping("/redeem")
-    @PreAuthorize("hasAuthority('LOYALTY_REDEEM') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('LOYALTY_REDEEM') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<LoyaltyRedeemResponse> redeem(@Valid @RequestBody RedeemLoyaltyRequest request) {
         return BaseResponse.ok("Redeemed successfully", loyaltyService.redeem(request));
     }

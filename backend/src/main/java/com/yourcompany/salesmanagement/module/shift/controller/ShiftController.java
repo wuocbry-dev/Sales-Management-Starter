@@ -20,25 +20,25 @@ public class ShiftController {
     }
 
     @PostMapping("/open")
-    @PreAuthorize("hasAuthority('SHIFT_OPEN') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIFT_OPEN') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ShiftResponse> open(@Valid @RequestBody OpenShiftRequest request) {
         return BaseResponse.ok("Shift opened successfully", shiftService.open(request));
     }
 
     @PostMapping("/{id}/close")
-    @PreAuthorize("hasAuthority('SHIFT_CLOSE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIFT_CLOSE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ShiftResponse> close(@PathVariable Long id, @Valid @RequestBody CloseShiftRequest request) {
         return BaseResponse.ok("Shift closed successfully", shiftService.close(id, request));
     }
 
     @GetMapping("/current")
-    @PreAuthorize("hasAuthority('SHIFT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIFT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ShiftResponse> current(@RequestParam Long branchId) {
         return BaseResponse.ok("Current shift fetched successfully", shiftService.getCurrent(branchId));
     }
 
     @GetMapping("/{id}/summary")
-    @PreAuthorize("hasAuthority('SHIFT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIFT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ShiftSummaryResponse> summary(@PathVariable Long id) {
         return BaseResponse.ok("Shift summary fetched successfully", shiftService.getSummary(id));
     }

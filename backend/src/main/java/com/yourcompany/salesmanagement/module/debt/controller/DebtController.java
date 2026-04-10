@@ -22,13 +22,13 @@ public class DebtController {
     }
 
     @GetMapping("/customers")
-    @PreAuthorize("hasAuthority('DEBT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('DEBT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<CustomerDebtResponse>> customerDebts(@RequestParam(required = false) Long branchId) {
         return BaseResponse.ok("Customer debts fetched successfully", debtService.listCustomerDebts(branchId));
     }
 
     @GetMapping("/suppliers")
-    @PreAuthorize("hasAuthority('DEBT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('DEBT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<SupplierDebtResponse>> supplierDebts(@RequestParam(required = false) Long branchId) {
         return BaseResponse.ok("Supplier debts fetched successfully", debtService.listSupplierDebts(branchId));
     }

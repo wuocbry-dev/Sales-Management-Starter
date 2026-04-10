@@ -20,19 +20,19 @@ public class ReturnOrderController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('POS_ORDER_RETURN') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('POS_ORDER_RETURN') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ReturnOrderResponse> create(@Valid @RequestBody CreateReturnOrderRequest request) {
         return BaseResponse.ok("Return created successfully", returnOrderService.create(request));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('POS_ORDER_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('POS_ORDER_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ReturnOrderResponse> getById(@PathVariable Long id) {
         return BaseResponse.ok("Return fetched successfully", returnOrderService.getById(id));
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('POS_ORDER_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('POS_ORDER_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<ReturnOrderResponse>> list(@RequestParam Long salesOrderId) {
         return BaseResponse.ok("Returns fetched successfully", returnOrderService.listBySalesOrder(salesOrderId));
     }

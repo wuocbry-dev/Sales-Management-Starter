@@ -18,7 +18,7 @@ public class EInvoiceController {
     }
 
     @PostMapping("/issue")
-    @PreAuthorize("hasAuthority('EINVOICE_ISSUE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('EINVOICE_ISSUE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<EInvoiceResponse> issue(
             @RequestParam Long salesOrderId,
             @Valid @RequestBody(required = false) IssueEInvoiceRequest request
@@ -27,7 +27,7 @@ public class EInvoiceController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('EINVOICE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('EINVOICE_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<EInvoiceResponse> get(@PathVariable Long id) {
         return BaseResponse.ok("E-invoice fetched successfully", eInvoiceService.getById(id));
     }

@@ -21,19 +21,19 @@ public class ShipmentController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('SHIPMENT_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIPMENT_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ShipmentResponse> create(@Valid @RequestBody CreateShipmentRequest request) {
         return BaseResponse.ok("Shipment created successfully", shipmentService.create(request));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('SHIPMENT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIPMENT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ShipmentResponse> getById(@PathVariable Long id) {
         return BaseResponse.ok("Shipment fetched successfully", shipmentService.getById(id));
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SHIPMENT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIPMENT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<ShipmentResponse>> list(
             @RequestParam(required = false) Long branchId,
             @RequestParam(required = false) Long salesOrderId) {
@@ -47,7 +47,7 @@ public class ShipmentController {
     }
 
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasAuthority('SHIPMENT_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('SHIPMENT_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ShipmentResponse> updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateShipmentStatusRequest request) {
         return BaseResponse.ok("Shipment status updated successfully", shipmentService.updateStatus(id, request));
     }

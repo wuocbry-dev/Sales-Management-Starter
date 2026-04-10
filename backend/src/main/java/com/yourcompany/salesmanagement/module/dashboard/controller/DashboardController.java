@@ -28,13 +28,13 @@ public class DashboardController {
     }
 
     @GetMapping("/summary")
-    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<DashboardSummaryResponse> getSummary(@RequestParam(required = false) Long branchId) {
         return BaseResponse.ok("Dashboard summary fetched successfully", dashboardService.getSummary(branchId));
     }
 
     @GetMapping("/sales-daily-summary")
-    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<SalesDailySummaryResponse>> salesDailySummary(
             @RequestParam(required = false) Long branchId,
             @RequestParam(required = false) LocalDate fromDate,
@@ -45,7 +45,7 @@ public class DashboardController {
     }
 
     @GetMapping("/inventory-warnings")
-    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('DASHBOARD_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<InventoryOverviewResponse>> inventoryWarnings(@RequestParam Long branchId) {
         return BaseResponse.ok("Inventory warnings fetched successfully",
                 dashboardReportService.getInventoryWarnings(branchId));

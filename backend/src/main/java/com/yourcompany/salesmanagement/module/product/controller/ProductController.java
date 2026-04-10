@@ -61,13 +61,13 @@ public class ProductController {
     }
 
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('PRODUCT_IMPORT') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PRODUCT_IMPORT') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ImportJobResponse> importProducts(@RequestPart("file") MultipartFile file) {
         return BaseResponse.ok("Import job created successfully", productImportExportService.startImport(file));
     }
 
     @GetMapping("/export")
-    @PreAuthorize("hasAuthority('PRODUCT_EXPORT') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PRODUCT_EXPORT') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public ResponseEntity<Resource> exportProducts() {
         Resource csv = productImportExportService.exportCsv();
         return ResponseEntity.ok()

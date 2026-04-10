@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,20 +42,20 @@ public class JwtService {
         Instant exp = now.plusSeconds(jwtProperties.accessTokenTtlSeconds());
 
         // Keep claims backward compatible: permissionCodes may be absent for older clients/tokens.
-        Map<String, Object> claims = permissionCodes == null ? Map.of(
-                "userId", userId,
-                "username", username,
-                "roleCodes", roleCodes,
-                "storeId", storeId,
-                "branchId", branchId
-        ) : Map.of(
-                "userId", userId,
-                "username", username,
-                "roleCodes", roleCodes,
-                "permissionCodes", permissionCodes,
-                "storeId", storeId,
-                "branchId", branchId
-        );
+        // Avoid Map.of(...) because it throws when any value is null (e.g. storeId/branchId for system users).
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("username", username);
+        claims.put("roleCodes", roleCodes);
+        if (permissionCodes != null) {
+            claims.put("permissionCodes", permissionCodes);
+        }
+        if (storeId != null) {
+            claims.put("storeId", storeId);
+        }
+        if (branchId != null) {
+            claims.put("branchId", branchId);
+        }
 
         return Jwts.builder()
                 .subject(String.valueOf(userId))

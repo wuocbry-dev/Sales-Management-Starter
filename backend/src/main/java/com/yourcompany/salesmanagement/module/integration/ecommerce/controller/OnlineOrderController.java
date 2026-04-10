@@ -22,7 +22,7 @@ public class OnlineOrderController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ONLINE_ORDER_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('ONLINE_ORDER_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<OnlineOrderResponse>> list(
             @RequestParam(required = false) Long channelId,
             @RequestParam(required = false) String status,

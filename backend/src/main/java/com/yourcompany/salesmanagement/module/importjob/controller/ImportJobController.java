@@ -19,7 +19,7 @@ public class ImportJobController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('IMPORT_JOB_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('IMPORT_JOB_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<ImportJobResponse> get(@PathVariable Long id) {
         return BaseResponse.ok("Import job fetched successfully", importJobService.getById(id));
     }

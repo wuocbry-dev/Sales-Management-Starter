@@ -4,6 +4,7 @@ import com.yourcompany.salesmanagement.module.permission.entity.Permission;
 import com.yourcompany.salesmanagement.module.permission.repository.PermissionRepository;
 import com.yourcompany.salesmanagement.module.user.entity.Role;
 import com.yourcompany.salesmanagement.module.user.repository.RoleRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,10 +31,16 @@ public class RbacSeedRunner implements ApplicationRunner {
 
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
+    private final boolean syncRolePermissions;
 
-    public RbacSeedRunner(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+    public RbacSeedRunner(
+            RoleRepository roleRepository,
+            PermissionRepository permissionRepository,
+            @Value("${app.seed.rbac.sync-role-permissions:false}") boolean syncRolePermissions
+    ) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
+        this.syncRolePermissions = syncRolePermissions;
     }
 
     @Override
@@ -77,7 +84,12 @@ public class RbacSeedRunner implements ApplicationRunner {
             if (role.getIsSystem() == null) role.setIsSystem(true);
             if (isBlank(role.getStatus())) role.setStatus("ACTIVE");
 
-            // Merge permissions (do not remove existing ones)
+            // By default we MERGE permissions to avoid unexpected changes in existing DBs.
+            // If you want the seed to be authoritative, enable:
+            // - app.seed.rbac.sync-role-permissions=true
+            if (syncRolePermissions) {
+                role.getPermissions().clear();
+            }
             Set<Permission> toAdd = new LinkedHashSet<>();
             for (String code : rdef.permissionCodes) {
                 Permission p = persistedPerms.get(code);
@@ -104,6 +116,7 @@ public class RbacSeedRunner implements ApplicationRunner {
         put(m, "ROLE_WRITE", "Role - Write", "role", "Create/update roles and mappings");
 
         put(m, "PERMISSION_READ", "Permission - Read", "permission", "View permissions catalog");
+        put(m, "AUDITLOG_READ", "Audit Log - Read", "auditlog", "View audit logs");
 
         // Store/Branch/Employee
         put(m, "STORE_READ", "Store - Read", "store", "View store settings");
@@ -203,24 +216,40 @@ public class RbacSeedRunner implements ApplicationRunner {
                 new LinkedHashSet<>(List.of(
                         "USER_READ", "USER_WRITE", "USER_RESET_PASSWORD",
                         "ROLE_READ", "ROLE_WRITE",
-                        "PERMISSION_READ"
+                        "PERMISSION_READ",
+                        "AUDITLOG_READ"
                 ))
         ));
 
         // Store owner: full business ops within their store
+        Set<String> storeOwnerPerms = new LinkedHashSet<>(allPerms);
+        storeOwnerPerms.removeAll(Set.of(
+                "USER_READ", "USER_WRITE", "USER_RESET_PASSWORD",
+                "ROLE_READ", "ROLE_WRITE",
+                "PERMISSION_READ"
+        ));
         m.put("STORE_OWNER", new RoleDef(
                 "STORE_OWNER",
                 "Store Owner",
                 "Store owner with full access to store data",
-                new LinkedHashSet<>(allPerms)
+                storeOwnerPerms
         ));
 
         // Alias for backward compatibility (existing default role)
+        Set<String> storeManagerPerms = new LinkedHashSet<>(storeOwnerPerms);
+        storeManagerPerms.removeAll(Set.of(
+                // Restrict sensitive write operations for day-to-day ops
+                "STORE_WRITE",
+                "PRODUCT_IMPORT", "PRODUCT_EXPORT",
+                "INTEGRATION_WRITE", "INTEGRATION_SYNC_ORDERS",
+                "CASHBOOK_WRITE",
+                "EINVOICE_ISSUE"
+        ));
         m.put("STORE_MANAGER", new RoleDef(
                 "STORE_MANAGER",
                 "Store Manager",
                 "Compatibility role (alias of STORE_OWNER)",
-                new LinkedHashSet<>(allPerms)
+                storeManagerPerms
         ));
 
         // Branch manager: most ops except platform user/role mgmt

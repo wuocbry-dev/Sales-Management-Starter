@@ -33,7 +33,7 @@ public class ReportController {
     }
 
     @GetMapping("/sales-summary")
-    @PreAuthorize("hasAuthority('REPORT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('REPORT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<SalesDailySummaryResponse>> salesSummary(
             @RequestParam(required = false) Long branchId,
             @RequestParam(required = false) LocalDate fromDate,
@@ -44,14 +44,14 @@ public class ReportController {
     }
 
     @GetMapping("/inventory-summary")
-    @PreAuthorize("hasAuthority('REPORT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('REPORT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<InventoryOverviewResponse>> inventorySummary(@RequestParam @NotNull Long branchId) {
         return BaseResponse.ok("Inventory summary fetched successfully",
                 inventoryOverviewService.getOverviewByBranch(branchId));
     }
 
     @GetMapping("/end-of-day")
-    @PreAuthorize("hasAuthority('REPORT_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('REPORT_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<EndOfDayReportResponse> endOfDay(
             @RequestParam @NotNull Long branchId,
             @RequestParam(required = false) LocalDate date

@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useAuth } from "../auth/useAuth";
 
 function DashboardLayout() {
   const navigate = useNavigate();

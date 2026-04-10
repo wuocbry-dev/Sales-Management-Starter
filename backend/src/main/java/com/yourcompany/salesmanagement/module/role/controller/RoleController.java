@@ -24,13 +24,13 @@ public class RoleController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER')")
+    @PreAuthorize("hasAuthority('ROLE_READ') or hasAnyRole('ADMIN','SYSTEM_ADMIN')")
     public BaseResponse<List<RoleResponse>> getRoles() {
         return BaseResponse.ok("Roles fetched successfully", roleService.getRoles());
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER')")
+    @PreAuthorize("hasAuthority('ROLE_WRITE') or hasAnyRole('ADMIN','SYSTEM_ADMIN')")
     public BaseResponse<RoleResponse> create(@Valid @RequestBody CreateRoleRequest request) {
         return BaseResponse.ok("Role created successfully", roleService.create(request));
     }

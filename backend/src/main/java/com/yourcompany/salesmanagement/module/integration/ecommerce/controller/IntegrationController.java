@@ -28,31 +28,31 @@ public class IntegrationController {
     }
 
     @GetMapping("/channels")
-    @PreAuthorize("hasAuthority('INTEGRATION_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INTEGRATION_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<IntegrationChannelResponse>> listChannels() {
         return BaseResponse.ok("Integration channels fetched successfully", integrationService.listChannels());
     }
 
     @PostMapping("/channels")
-    @PreAuthorize("hasAuthority('INTEGRATION_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INTEGRATION_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<IntegrationChannelResponse> createChannel(@Valid @RequestBody CreateIntegrationChannelRequest request) {
         return BaseResponse.ok("Integration channel created successfully", integrationService.createChannel(request));
     }
 
     @GetMapping("/product-mappings")
-    @PreAuthorize("hasAuthority('INTEGRATION_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INTEGRATION_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<IntegrationProductMappingResponse>> listProductMappings() {
         return BaseResponse.ok("Integration product mappings fetched successfully", integrationService.listProductMappings());
     }
 
     @PostMapping("/product-mappings")
-    @PreAuthorize("hasAuthority('INTEGRATION_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INTEGRATION_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<IntegrationProductMappingResponse> createProductMapping(@Valid @RequestBody CreateIntegrationProductMappingRequest request) {
         return BaseResponse.ok("Integration product mapping created successfully", integrationService.createProductMapping(request));
     }
 
     @PostMapping("/{channelId}/sync-orders")
-    @PreAuthorize("hasAuthority('INTEGRATION_SYNC_ORDERS') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('INTEGRATION_SYNC_ORDERS') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<IntegrationSyncResponse> syncOrders(@PathVariable Long channelId) {
         return BaseResponse.ok("Sync started", integrationService.syncOrders(channelId));
     }

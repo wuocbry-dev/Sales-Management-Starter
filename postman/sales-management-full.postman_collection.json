@@ -8,6 +8,8 @@
     { "key": "baseUrl", "value": "http://localhost:8080" },
     { "key": "accessToken", "value": "" },
     { "key": "token", "value": "" },
+    { "key": "username", "value": "system_admin" },
+    { "key": "password", "value": "12345678" },
     { "key": "channelId", "value": "1" }
   ],
   "item": [
@@ -15,13 +17,21 @@
       "name": "0) Auth",
       "item": [
         {
+          "name": "GET /api/v1/health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/health", "host": ["{{baseUrl}}"], "path": ["api", "v1", "health"] }
+          },
+          "response": []
+        },
+        {
           "name": "POST /api/auth/register",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Postman Demo\",\n  \"username\": \"postman_demo\",\n  \"password\": \"123456\",\n  \"storeName\": \"Demo Store\",\n  \"businessType\": \"RETAIL\"\n}\n"
+              "raw": "{\n  \"fullName\": \"Postman Demo\",\n  \"username\": \"postman_demo\",\n  \"password\": \"{{password}}\",\n  \"storeName\": \"Demo Store\",\n  \"businessType\": \"RETAIL\"\n}\n"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
           },
@@ -32,9 +42,29 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"postman_demo\",\n  \"password\": \"123456\"\n}\n" },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login returns 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "try {",
+                  "  var json = pm.response.json();",
+                  "  var token = (json && json.data && json.data.accessToken) ? json.data.accessToken : null;",
+                  "  if (token) {",
+                  "    pm.collectionVariables.set('accessToken', token);",
+                  "  }",
+                  "} catch (e) {}"
+                ]
+              }
+            }
+          ],
           "response": []
         },
         {
@@ -151,7 +181,7 @@
               { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
               { "key": "Content-Type", "value": "application/json", "type": "text" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Cashier\",\n  \"code\": \"CASHIER\",\n  \"description\": \"POS cashier\",\n  \"permissionCodes\": [\"PRODUCT_READ\", \"SALES_ORDER_CREATE\"]\n}\n" },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Cashier\",\n  \"code\": \"CASHIER\",\n  \"description\": \"POS cashier\",\n  \"permissionCodes\": [\"PRODUCT_READ\", \"POS_ORDER_CREATE\"]\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/roles", "host": ["{{baseUrl}}"], "path": ["api", "roles"] }
           },
           "response": []
@@ -578,6 +608,20 @@
             "url": { "raw": "{{baseUrl}}/api/v1/inventory/warnings?branchId=1", "host": ["{{baseUrl}}"], "path": ["api", "v1", "inventory", "warnings"], "query": [{ "key": "branchId", "value": "1" }] }
           },
           "response": []
+        },
+        {
+          "name": "GET /api/v1/inventory/overview",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory/overview?branchId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory", "overview"],
+              "query": [{ "key": "branchId", "value": "1" }]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -702,6 +746,39 @@
           "name": "GET /api/cashbook",
           "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }], "url": { "raw": "{{baseUrl}}/api/cashbook", "host": ["{{baseUrl}}"], "path": ["api", "cashbook"] } },
           "response": []
+        },
+        {
+          "name": "POST /api/cashbook/entries",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branchId\": 1,\n  \"entryType\": \"IN\",\n  \"category\": \"MANUAL\",\n  \"amount\": 50000,\n  \"description\": \"Thu tien mat (demo)\",\n  \"occurredAt\": \"2026-04-10T10:00:00\"\n}\n"
+            },
+            "url": { "raw": "{{baseUrl}}/api/cashbook/entries", "host": ["{{baseUrl}}"], "path": ["api", "cashbook", "entries"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/cashbook/summary?branchId={branchId}&date={date}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/cashbook/summary?branchId=1&date=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cashbook", "summary"],
+              "query": [
+                { "key": "branchId", "value": "1" },
+                { "key": "date", "value": "" }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -776,6 +853,23 @@
             ],
             "body": { "mode": "raw", "raw": "{\n  \"salesOrderId\": 1,\n  \"carrierName\": \"GHTK\",\n  \"serviceName\": \"FAST\",\n  \"trackingNumber\": \"TRK-0001\",\n  \"receiverName\": \"Nguyen Van A\",\n  \"receiverPhone\": \"0901234567\",\n  \"receiverAddress\": \"123 ABC, HCM\",\n  \"shippingFee\": 20000,\n  \"codAmount\": 0\n}\n" },
             "url": { "raw": "{{baseUrl}}/api/shipments", "host": ["{{baseUrl}}"], "path": ["api", "shipments"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/shipments?branchId={branchId}&salesOrderId={salesOrderId}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/shipments?branchId=1&salesOrderId=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "shipments"],
+              "query": [
+                { "key": "branchId", "value": "1" },
+                { "key": "salesOrderId", "value": "" }
+              ]
+            }
           },
           "response": []
         },
@@ -923,6 +1017,112 @@
                 { "key": "status", "value": "SYNCED" }
               ]
             }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12) E-Invoice / Audit Logs",
+      "item": [
+        {
+          "name": "POST /api/v1/e-invoices/issue",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"buyerName\": \"Nguyen Van A\",\n  \"buyerTaxCode\": null,\n  \"buyerAddress\": \"HCM\",\n  \"buyerEmail\": \"a@example.com\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/e-invoices/issue?salesOrderId=1", "host": ["{{baseUrl}}"], "path": ["api", "v1", "e-invoices", "issue"], "query": [{ "key": "salesOrderId", "value": "1" }] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/e-invoices/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/e-invoices/1", "host": ["{{baseUrl}}"], "path": ["api", "v1", "e-invoices", "1"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/audit-logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/audit-logs?limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "audit-logs"],
+              "query": [
+                { "key": "limit", "value": "50" },
+                { "key": "offset", "value": "0" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "13) Promotion / Voucher",
+      "item": [
+        {
+          "name": "GET /api/v1/promotions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promotions", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promotions"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/promotions",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Promo 10%\",\n  \"code\": \"PROMO10\",\n  \"discountType\": \"PERCENT\",\n  \"discountValue\": 10,\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/promotions", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promotions"] }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/vouchers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/vouchers", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vouchers"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/vouchers",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Voucher 10k\",\n  \"code\": \"V10K\",\n  \"discountType\": \"AMOUNT\",\n  \"discountValue\": 10000,\n  \"status\": \"ACTIVE\"\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/vouchers", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vouchers"] }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/vouchers/validate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"V10K\",\n  \"salesOrderSubtotal\": 100000\n}\n" },
+            "url": { "raw": "{{baseUrl}}/api/v1/vouchers/validate", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vouchers", "validate"] }
           },
           "response": []
         }

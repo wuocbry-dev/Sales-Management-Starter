@@ -27,19 +27,19 @@ public class CashbookController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('CASHBOOK_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('CASHBOOK_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<CashbookEntryResponse>> list() {
         return BaseResponse.ok("Cashbook entries fetched successfully", cashbookService.list());
     }
 
     @PostMapping("/entries")
-    @PreAuthorize("hasAuthority('CASHBOOK_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('CASHBOOK_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<CashbookEntryResponse> create(@Valid @RequestBody CreateCashbookEntryRequest request) {
         return BaseResponse.ok("Cashbook entry created successfully", cashbookService.create(request));
     }
 
     @GetMapping("/summary")
-    @PreAuthorize("hasAuthority('CASHBOOK_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('CASHBOOK_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<CashbookSummaryResponse> summary(
             @RequestParam Long branchId,
             @RequestParam(required = false) LocalDate date

@@ -870,3 +870,281 @@ CREATE TABLE IF NOT EXISTS online_orders (
   INDEX idx_online_orders_store_channel (store_id, channel_id)
 );
 
+-- ============================================================
+-- RBAC Seed (roles/permissions/role_permissions)
+-- Aligned with backend seed: RbacSeedRunner (2026-04-10)
+-- Idempotent: safe to run multiple times
+-- ============================================================
+
+-- Roles
+INSERT INTO roles (name, code, description, is_system, status)
+VALUES
+  ('System Admin',   'SYSTEM_ADMIN',  'Platform/system administrator', 1, 'ACTIVE'),
+  ('Store Owner',    'STORE_OWNER',   'Store owner with full access to store data', 1, 'ACTIVE'),
+  ('Store Manager',  'STORE_MANAGER', 'Compatibility role (alias of STORE_OWNER)', 1, 'ACTIVE'),
+  ('Branch Manager', 'BRANCH_MANAGER','Manage operations within a branch', 1, 'ACTIVE'),
+  ('Cashier',        'CASHIER',       'POS cashier / sales staff', 1, 'ACTIVE'),
+  ('Warehouse Staff','WAREHOUSE',     'Warehouse operations (purchasing & inventory)', 1, 'ACTIVE'),
+  ('Accountant / Cashier (Finance)', 'ACCOUNTANT', 'Finance operations', 1, 'ACTIVE'),
+  ('CSKH / Online Sales', 'CSKH_ONLINE', 'Customer care / online sales', 1, 'ACTIVE'),
+  ('Admin',          'ADMIN',         'Compatibility admin role', 1, 'ACTIVE'),
+  ('Super Admin',    'SUPER_ADMIN',   'Compatibility super admin role', 1, 'ACTIVE')
+ON DUPLICATE KEY UPDATE
+  name = VALUES(name),
+  description = VALUES(description),
+  is_system = VALUES(is_system),
+  status = VALUES(status);
+
+-- Permissions
+INSERT INTO permissions (code, name, module_name, description)
+VALUES
+  ('AUDITLOG_READ', 'Audit Log - Read', 'auditlog', 'View audit logs'),
+
+  ('USER_READ', 'User - Read', 'user', 'View users'),
+  ('USER_WRITE', 'User - Write', 'user', 'Create/update users'),
+  ('USER_RESET_PASSWORD', 'User - Reset Password', 'user', 'Reset user passwords'),
+
+  ('ROLE_READ', 'Role - Read', 'role', 'View roles'),
+  ('ROLE_WRITE', 'Role - Write', 'role', 'Create/update roles and mappings'),
+
+  ('PERMISSION_READ', 'Permission - Read', 'permission', 'View permissions catalog'),
+
+  ('STORE_READ', 'Store - Read', 'store', 'View store settings'),
+  ('STORE_WRITE', 'Store - Write', 'store', 'Update store settings'),
+  ('BRANCH_READ', 'Branch - Read', 'branch', 'View branches'),
+  ('BRANCH_WRITE', 'Branch - Write', 'branch', 'Create/update branches'),
+  ('EMPLOYEE_READ', 'Employee - Read', 'employee', 'View employees'),
+  ('EMPLOYEE_WRITE', 'Employee - Write', 'employee', 'Create/update employees'),
+
+  ('CATEGORY_READ', 'Category - Read', 'category', 'View categories'),
+  ('CATEGORY_WRITE', 'Category - Write', 'category', 'Create/update categories'),
+  ('PRODUCT_READ', 'Product - Read', 'product', 'View products'),
+  ('PRODUCT_WRITE', 'Product - Write', 'product', 'Create/update/disable products'),
+  ('PRODUCT_IMPORT', 'Product - Import', 'product', 'Import products from file'),
+  ('PRODUCT_EXPORT', 'Product - Export', 'product', 'Export products to file'),
+
+  ('SUPPLIER_READ', 'Supplier - Read', 'supplier', 'View suppliers'),
+  ('SUPPLIER_WRITE', 'Supplier - Write', 'supplier', 'Create/update suppliers'),
+
+  ('INVENTORY_READ', 'Inventory - Read', 'inventory', 'View inventory'),
+  ('INVENTORY_ADJUST', 'Inventory - Adjust', 'inventory', 'Adjust inventory quantities'),
+
+  ('PURCHASE_READ', 'Purchase Order - Read', 'purchaseorder', 'View purchase orders'),
+  ('PURCHASE_CREATE', 'Purchase Order - Create', 'purchaseorder', 'Create purchase orders'),
+  ('PURCHASE_RECEIVE', 'Purchase Order - Receive', 'purchaseorder', 'Receive goods and post inventory'),
+  ('PURCHASE_CANCEL', 'Purchase Order - Cancel', 'purchaseorder', 'Cancel purchase orders'),
+  ('PURCHASE_RETURN', 'Purchase Order - Return', 'purchaseorder', 'Return goods to supplier'),
+
+  ('POS_ORDER_READ', 'POS Order - Read', 'salesorder', 'View sales orders'),
+  ('POS_ORDER_CREATE', 'POS Order - Create', 'salesorder', 'Create sales orders'),
+  ('POS_ORDER_COMPLETE', 'POS Order - Complete', 'salesorder', 'Complete sales orders'),
+  ('POS_ORDER_RETURN', 'POS Return - Create', 'returnorder', 'Create return orders'),
+  ('POS_ORDER_HOLD', 'POS Order - Hold', 'salesorder', 'Hold/reserve orders'),
+  ('POS_ORDER_DISCOUNT', 'POS Order - Discount', 'salesorder', 'Apply voucher/promotion to orders'),
+
+  ('PAYMENT_CREATE', 'Payment - Create', 'payment', 'Create payments for orders'),
+  ('PAYMENT_READ', 'Payment - Read', 'payment', 'View payments'),
+
+  ('CUSTOMER_READ', 'Customer - Read', 'customer', 'View customers'),
+  ('CUSTOMER_WRITE', 'Customer - Write', 'customer', 'Create/update customers'),
+  ('LOYALTY_READ', 'Loyalty - Read', 'loyalty', 'View loyalty accounts/transactions'),
+  ('LOYALTY_REDEEM', 'Loyalty - Redeem', 'loyalty', 'Redeem loyalty points'),
+
+  ('CASHBOOK_READ', 'Cashbook - Read', 'cashbook', 'View cashbook entries'),
+  ('CASHBOOK_WRITE', 'Cashbook - Write', 'cashbook', 'Create manual cashbook entries'),
+  ('DEBT_READ', 'Debt - Read', 'finance', 'View customer/supplier debts'),
+  ('REPORT_READ', 'Report - Read', 'report', 'View reports'),
+  ('DASHBOARD_READ', 'Dashboard - Read', 'dashboard', 'View dashboard widgets'),
+
+  ('IMPORT_JOB_READ', 'Import Job - Read', 'importjob', 'View import job status/result'),
+
+  ('EINVOICE_ISSUE', 'E-Invoice - Issue', 'einvoice', 'Issue e-invoice for sales orders'),
+  ('EINVOICE_READ', 'E-Invoice - Read', 'einvoice', 'View issued e-invoices'),
+
+  ('INTEGRATION_READ', 'Integration - Read', 'integration', 'View integration channels and mappings'),
+  ('INTEGRATION_WRITE', 'Integration - Write', 'integration', 'Create/update integration channels and mappings'),
+  ('INTEGRATION_SYNC_ORDERS', 'Integration - Sync Orders', 'integration', 'Trigger sync orders from channel'),
+  ('ONLINE_ORDER_READ', 'Online Order - Read', 'integration', 'View online orders'),
+
+  ('SHIPMENT_READ', 'Shipment - Read', 'shipment', 'View shipments'),
+  ('SHIPMENT_WRITE', 'Shipment - Write', 'shipment', 'Create/update shipments and statuses'),
+
+  ('SHIFT_READ', 'Shift - Read', 'shift', 'View current/previous shifts'),
+  ('SHIFT_OPEN', 'Shift - Open', 'shift', 'Open a shift at a branch'),
+  ('SHIFT_CLOSE', 'Shift - Close', 'shift', 'Close a shift at a branch')
+ON DUPLICATE KEY UPDATE
+  name = VALUES(name),
+  module_name = VALUES(module_name),
+  description = VALUES(description);
+
+-- Role -> permission mappings (use INSERT IGNORE for idempotency)
+
+-- SYSTEM_ADMIN
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN ('USER_READ','USER_WRITE','USER_RESET_PASSWORD','ROLE_READ','ROLE_WRITE','PERMISSION_READ','AUDITLOG_READ')
+WHERE r.code = 'SYSTEM_ADMIN';
+
+-- STORE_OWNER (all business perms; exclude platform user/role/permission)
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN (
+  'AUDITLOG_READ',
+  'STORE_READ','STORE_WRITE',
+  'BRANCH_READ','BRANCH_WRITE',
+  'EMPLOYEE_READ','EMPLOYEE_WRITE',
+  'CATEGORY_READ','CATEGORY_WRITE',
+  'PRODUCT_READ','PRODUCT_WRITE','PRODUCT_IMPORT','PRODUCT_EXPORT',
+  'SUPPLIER_READ','SUPPLIER_WRITE',
+  'INVENTORY_READ','INVENTORY_ADJUST',
+  'PURCHASE_READ','PURCHASE_CREATE','PURCHASE_RECEIVE','PURCHASE_CANCEL','PURCHASE_RETURN',
+  'POS_ORDER_READ','POS_ORDER_CREATE','POS_ORDER_COMPLETE','POS_ORDER_RETURN','POS_ORDER_HOLD','POS_ORDER_DISCOUNT',
+  'PAYMENT_CREATE','PAYMENT_READ',
+  'CUSTOMER_READ','CUSTOMER_WRITE',
+  'LOYALTY_READ','LOYALTY_REDEEM',
+  'CASHBOOK_READ','CASHBOOK_WRITE','DEBT_READ',
+  'REPORT_READ','DASHBOARD_READ',
+  'IMPORT_JOB_READ',
+  'EINVOICE_ISSUE','EINVOICE_READ',
+  'INTEGRATION_READ','INTEGRATION_WRITE','INTEGRATION_SYNC_ORDERS','ONLINE_ORDER_READ',
+  'SHIPMENT_READ','SHIPMENT_WRITE',
+  'SHIFT_READ','SHIFT_OPEN','SHIFT_CLOSE'
+)
+WHERE r.code = 'STORE_OWNER';
+
+-- STORE_MANAGER (STORE_OWNER minus sensitive write ops)
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN (
+  'AUDITLOG_READ',
+  'STORE_READ',
+  'BRANCH_READ','BRANCH_WRITE',
+  'EMPLOYEE_READ','EMPLOYEE_WRITE',
+  'CATEGORY_READ','CATEGORY_WRITE',
+  'PRODUCT_READ','PRODUCT_WRITE',
+  'SUPPLIER_READ','SUPPLIER_WRITE',
+  'INVENTORY_READ','INVENTORY_ADJUST',
+  'PURCHASE_READ','PURCHASE_CREATE','PURCHASE_RECEIVE','PURCHASE_CANCEL','PURCHASE_RETURN',
+  'POS_ORDER_READ','POS_ORDER_CREATE','POS_ORDER_COMPLETE','POS_ORDER_RETURN','POS_ORDER_HOLD','POS_ORDER_DISCOUNT',
+  'PAYMENT_CREATE','PAYMENT_READ',
+  'CUSTOMER_READ','CUSTOMER_WRITE',
+  'LOYALTY_READ','LOYALTY_REDEEM',
+  'CASHBOOK_READ','DEBT_READ',
+  'REPORT_READ','DASHBOARD_READ',
+  'IMPORT_JOB_READ',
+  'EINVOICE_READ',
+  'INTEGRATION_READ','ONLINE_ORDER_READ',
+  'SHIPMENT_READ','SHIPMENT_WRITE',
+  'SHIFT_READ','SHIFT_OPEN','SHIFT_CLOSE'
+)
+WHERE r.code = 'STORE_MANAGER';
+
+-- BRANCH_MANAGER
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN (
+  'STORE_READ',
+  'BRANCH_READ',
+  'EMPLOYEE_READ',
+  'CATEGORY_READ','CATEGORY_WRITE',
+  'PRODUCT_READ','PRODUCT_WRITE','PRODUCT_IMPORT','PRODUCT_EXPORT',
+  'SUPPLIER_READ','SUPPLIER_WRITE',
+  'INVENTORY_READ','INVENTORY_ADJUST',
+  'PURCHASE_READ','PURCHASE_CREATE','PURCHASE_RECEIVE',
+  'POS_ORDER_READ','POS_ORDER_CREATE','POS_ORDER_COMPLETE','POS_ORDER_RETURN','POS_ORDER_HOLD','POS_ORDER_DISCOUNT',
+  'PAYMENT_CREATE','PAYMENT_READ',
+  'CUSTOMER_READ','CUSTOMER_WRITE',
+  'LOYALTY_READ','LOYALTY_REDEEM',
+  'INTEGRATION_READ','INTEGRATION_WRITE','INTEGRATION_SYNC_ORDERS','ONLINE_ORDER_READ',
+  'CASHBOOK_READ','CASHBOOK_WRITE','DEBT_READ',
+  'REPORT_READ','DASHBOARD_READ',
+  'SHIFT_READ','SHIFT_OPEN','SHIFT_CLOSE',
+  'IMPORT_JOB_READ',
+  'EINVOICE_ISSUE','EINVOICE_READ',
+  'SHIPMENT_READ','SHIPMENT_WRITE'
+)
+WHERE r.code = 'BRANCH_MANAGER';
+
+-- CASHIER
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN (
+  'CATEGORY_READ',
+  'PRODUCT_READ',
+  'INVENTORY_READ',
+  'POS_ORDER_READ','POS_ORDER_CREATE','POS_ORDER_COMPLETE','POS_ORDER_RETURN',
+  'POS_ORDER_DISCOUNT',
+  'PAYMENT_CREATE','PAYMENT_READ',
+  'CUSTOMER_READ','CUSTOMER_WRITE',
+  'LOYALTY_READ','LOYALTY_REDEEM',
+  'DASHBOARD_READ',
+  'SHIFT_READ','SHIFT_OPEN','SHIFT_CLOSE',
+  'SHIPMENT_READ','SHIPMENT_WRITE'
+)
+WHERE r.code = 'CASHIER';
+
+-- WAREHOUSE
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN (
+  'SUPPLIER_READ','SUPPLIER_WRITE',
+  'PRODUCT_READ','PRODUCT_IMPORT','PRODUCT_EXPORT',
+  'INVENTORY_READ','INVENTORY_ADJUST',
+  'PURCHASE_READ','PURCHASE_CREATE','PURCHASE_RECEIVE',
+  'SHIFT_READ',
+  'ONLINE_ORDER_READ',
+  'REPORT_READ','DASHBOARD_READ',
+  'SHIPMENT_READ'
+)
+WHERE r.code = 'WAREHOUSE';
+
+-- ACCOUNTANT
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN (
+  'PAYMENT_READ',
+  'CASHBOOK_READ','CASHBOOK_WRITE','DEBT_READ',
+  'SHIFT_READ',
+  'REPORT_READ','DASHBOARD_READ',
+  'IMPORT_JOB_READ',
+  'PRODUCT_EXPORT',
+  'EINVOICE_ISSUE','EINVOICE_READ',
+  'INTEGRATION_READ','ONLINE_ORDER_READ'
+)
+WHERE r.code = 'ACCOUNTANT';
+
+-- CSKH_ONLINE
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON p.code IN (
+  'CUSTOMER_READ','CUSTOMER_WRITE',
+  'LOYALTY_READ','LOYALTY_REDEEM',
+  'POS_ORDER_READ',
+  'POS_ORDER_DISCOUNT',
+  'REPORT_READ','DASHBOARD_READ',
+  'SHIPMENT_READ'
+)
+WHERE r.code = 'CSKH_ONLINE';
+
+-- ADMIN (all perms)
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON 1=1
+WHERE r.code = 'ADMIN';
+
+-- SUPER_ADMIN (all perms)
+INSERT IGNORE INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r
+JOIN permissions p ON 1=1
+WHERE r.code = 'SUPER_ADMIN';
+

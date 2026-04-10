@@ -20,7 +20,7 @@ public class PermissionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('PERMISSION_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER')")
+    @PreAuthorize("hasAuthority('PERMISSION_READ') or hasAnyRole('ADMIN','SYSTEM_ADMIN')")
     public BaseResponse<List<PermissionResponse>> getPermissions() {
         return BaseResponse.ok("Permissions fetched successfully", permissionService.getPermissions());
     }

@@ -27,25 +27,25 @@ public class PurchaseOrderController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('PURCHASE_CREATE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PURCHASE_CREATE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<PurchaseOrderDetailResponse> create(@Valid @RequestBody CreatePurchaseOrderRequest request) {
         return BaseResponse.ok("Purchase order created successfully", purchaseOrderService.create(request));
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('PURCHASE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PURCHASE_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<List<PurchaseOrderSummaryResponse>> list() {
         return BaseResponse.ok("Purchase orders fetched successfully", purchaseOrderService.listPurchaseOrders());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('PURCHASE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PURCHASE_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<PurchaseOrderDetailResponse> getById(@PathVariable Long id) {
         return BaseResponse.ok("Purchase order fetched successfully", purchaseOrderService.getById(id));
     }
 
     @PostMapping("/{id}/items")
-    @PreAuthorize("hasAuthority('PURCHASE_CREATE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PURCHASE_CREATE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<PurchaseOrderDetailResponse> addItem(
             @PathVariable Long id,
             @Valid @RequestBody AddPurchaseOrderItemRequest request) {
@@ -57,7 +57,7 @@ public class PurchaseOrderController {
      * Body optional: empty or {@code { "lines": null }} receives all remaining quantities.
      */
     @PostMapping("/{id}/receive")
-    @PreAuthorize("hasAuthority('PURCHASE_RECEIVE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PURCHASE_RECEIVE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<PurchaseOrderDetailResponse> receive(
             @PathVariable Long id,
             @RequestBody(required = false) @Valid ReceivePurchaseOrderRequest request) {
@@ -65,7 +65,7 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/cancel")
-    @PreAuthorize("hasAuthority('PURCHASE_CANCEL') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PURCHASE_CANCEL') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<PurchaseOrderDetailResponse> cancel(
             @PathVariable Long id,
             @RequestBody(required = false) @Valid CancelPurchaseOrderRequest request) {
@@ -73,7 +73,7 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/return")
-    @PreAuthorize("hasAuthority('PURCHASE_RETURN') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('PURCHASE_RETURN') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<PurchaseReturnResponse> createReturn(
             @PathVariable Long id,
             @Valid @RequestBody CreatePurchaseReturnRequest request) {

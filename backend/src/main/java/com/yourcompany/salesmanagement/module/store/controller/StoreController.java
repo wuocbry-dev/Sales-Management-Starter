@@ -22,19 +22,19 @@ public class StoreController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasAuthority('STORE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('STORE_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<StoreMeResponse> me() {
         return BaseResponse.ok("OK", storeService.getMyStore());
     }
 
     @GetMapping("/current")
-    @PreAuthorize("hasAuthority('STORE_READ') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('STORE_READ') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<StoreMeResponse> current() {
         return BaseResponse.ok("OK", storeService.getMyStore());
     }
 
     @PutMapping("/current")
-    @PreAuthorize("hasAuthority('STORE_WRITE') or hasAnyRole('SUPER_ADMIN','ADMIN','STORE_MANAGER','STORE_OWNER')")
+    @PreAuthorize("hasAuthority('STORE_WRITE') or hasAnyRole('ADMIN','STORE_MANAGER','STORE_OWNER')")
     public BaseResponse<StoreMeResponse> updateCurrent(@Valid @RequestBody UpdateCurrentStoreRequest request) {
         return BaseResponse.ok("Store updated successfully", storeService.updateMyStore(request));
     }
